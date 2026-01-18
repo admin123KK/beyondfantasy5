@@ -154,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => Registerpage()));
+                                    builder: (context) => RegisterPage()));
                           },
                           child: const Text(
                             "Register",
