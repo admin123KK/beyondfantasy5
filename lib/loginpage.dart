@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     // Welcome Back title
                     const Text(
-                      "Welcom Back",
+                      "Welcome Back",
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,

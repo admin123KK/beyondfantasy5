@@ -1,83 +1,88 @@
 import 'package:beyondfantasy/loginpage.dart';
 import 'package:flutter/material.dart';
 
-class Pageone extends StatefulWidget {
+// Page 1
+class Pageone extends StatelessWidget {
   const Pageone({super.key});
 
   @override
-  State<Pageone> createState() => _PageoneState();
-}
-
-class _PageoneState extends State<Pageone> {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF003262),
-      body: SingleChildScrollView(
+      backgroundColor: const Color(0xFF003262),
+      body: SafeArea(
         child: Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 200),
-              child: Column(
-                children: [
-                  Text(
-                    'PICK YOUR PLAYER',
-                    style: TextStyle(
+            const Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text(
+                      'PICK YOUR PLAYER',
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Color(0xFFFDB515),
-                        fontSize: 40),
-                  ),
-                  Text(
-                    'AND LEAD THE WORLD',
-                    style: TextStyle(
+                        fontSize: 40,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    Text(
+                      'AND LEAD THE WORLD',
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
-                        fontSize: 40),
-                  ),
-                ],
+                        fontSize: 40,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
               ),
             ),
+
+            // Bottom bar: progress dots + Skip
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 40),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    height: 6,
-                    width: 33,
-                    decoration: BoxDecoration(
-                      color: Color(0xFFFDB515),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Container(
-                    height: 6,
-                    width: 33,
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(148, 253, 180, 21),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Container(
-                    height: 6,
-                    width: 33,
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(170, 116, 94, 49),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 300,
+                  Row(
+                    children: [
+                      Container(
+                        height: 6,
+                        width: 33,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFDB515),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      const SizedBox(width: 5),
+                      Container(
+                        height: 6,
+                        width: 33,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(148, 253, 180, 21),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      const SizedBox(width: 5),
+                      Container(
+                        height: 6,
+                        width: 33,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(170, 116, 94, 49),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                    ],
                   ),
                   InkWell(
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Pagetwo()));
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (_) => const Pagetwo()),
+                      );
                     },
                     child: const Text(
                       'Skip',
@@ -94,90 +99,100 @@ class _PageoneState extends State<Pageone> {
   }
 }
 
-class Pagetwo extends StatefulWidget {
+// Page 2
+class Pagetwo extends StatelessWidget {
   const Pagetwo({super.key});
 
   @override
-  State<Pagetwo> createState() => _PagetwoState();
-}
-
-class _PagetwoState extends State<Pagetwo> {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF003262),
-      body: SingleChildScrollView(
+      backgroundColor: const Color(0xFF003262),
+      body: SafeArea(
         child: Column(
           children: [
-            const Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 200),
-              child: Column(
-                children: [
-                  Text(
-                    'YOUR STRATEGY ',
-                    style: TextStyle(
+            // Main content - centered vertically
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text(
+                      'YOUR STRATEGY',
+                      style: TextStyle(
                         color: Color(0xFFFDB515),
                         fontSize: 40,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    'YOUR TEAM YOUR VICTORY',
-                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    Text(
+                      'YOUR TEAM YOUR VICTORY',
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: 40,
-                        fontWeight: FontWeight.bold),
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // Bottom bar: progress + Skip
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 40),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        height: 6,
+                        width: 33,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(145, 254, 190, 52),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      const SizedBox(width: 5),
+                      Container(
+                        height: 6,
+                        width: 33,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFDB515),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      const SizedBox(width: 5),
+                      Container(
+                        height: 6,
+                        width: 33,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(162, 234, 176, 50),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                    ],
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (_) => const Pagethree()),
+                      );
+                    },
+                    child: const Text(
+                      'Skip',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: Row(
-                children: [
-                  Container(
-                    height: 6,
-                    width: 33,
-                    decoration: BoxDecoration(
-                        color: Color.fromARGB(145, 254, 190, 52),
-                        borderRadius: BorderRadius.circular(20)),
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Container(
-                    height: 6,
-                    width: 33,
-                    decoration: BoxDecoration(
-                        color: Color(0xFFFDB515),
-                        borderRadius: BorderRadius.circular(20)),
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Container(
-                    height: 6,
-                    width: 33,
-                    decoration: BoxDecoration(
-                        color: Color.fromARGB(162, 234, 176, 50),
-                        borderRadius: BorderRadius.circular(20)),
-                  ),
-                  const SizedBox(
-                    width: 300,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Pagethree()));
-                    },
-                    child: const Text(
-                      'Skip',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  )
-                ],
-              ),
-            )
           ],
         ),
       ),
@@ -185,90 +200,100 @@ class _PagetwoState extends State<Pagetwo> {
   }
 }
 
-class Pagethree extends StatefulWidget {
+// Page 3
+class Pagethree extends StatelessWidget {
   const Pagethree({super.key});
 
   @override
-  State<Pagethree> createState() => _PagethreeState();
-}
-
-class _PagethreeState extends State<Pagethree> {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF003262),
-      body: SingleChildScrollView(
+      backgroundColor: const Color(0xFF003262),
+      body: SafeArea(
         child: Column(
           children: [
-            const Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 200),
-              child: Column(
-                children: [
-                  Text(
-                    'JOIN THE FANTASY ',
-                    style: TextStyle(
+            // Main content - centered
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text(
+                      'JOIN THE FANTASY',
+                      style: TextStyle(
                         color: Color(0xFFFDB515),
                         fontSize: 40,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    'CHALLANGE THE WORLD',
-                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    Text(
+                      'CHALLANGE THE WORLD',
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: 40,
-                        fontWeight: FontWeight.bold),
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // Bottom bar: progress + Skip → goes to Login
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 40),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        height: 6,
+                        width: 33,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(147, 234, 176, 50),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      const SizedBox(width: 5),
+                      Container(
+                        height: 6,
+                        width: 33,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(168, 253, 180, 21),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      const SizedBox(width: 5),
+                      Container(
+                        height: 6,
+                        width: 33,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFDB515),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                    ],
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (_) => const LoginPage()),
+                      );
+                    },
+                    child: const Text(
+                      'Skip',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: Row(
-                children: [
-                  Container(
-                    height: 6,
-                    width: 33,
-                    decoration: BoxDecoration(
-                        color: Color.fromARGB(147, 234, 176, 50),
-                        borderRadius: BorderRadius.circular(20)),
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Container(
-                    height: 6,
-                    width: 33,
-                    decoration: BoxDecoration(
-                        color: Color.fromARGB(168, 253, 180, 21),
-                        borderRadius: BorderRadius.circular(20)),
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Container(
-                    height: 6,
-                    width: 33,
-                    decoration: BoxDecoration(
-                        color: Color(0xFFFDB515),
-                        borderRadius: BorderRadius.circular(20)),
-                  ),
-                  const SizedBox(
-                    width: 300,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => LoginPage()));
-                    },
-                    child: const Text(
-                      'Skip',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  )
-                ],
-              ),
-            )
           ],
         ),
       ),

@@ -15,29 +15,29 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF003262), // Dark blue background
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Stack(
-            children: [
-              // White rounded card at bottom
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.fromLTRB(24, 32, 24, 40),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(32),
-                      topRight: Radius.circular(32),
-                    ),
+      backgroundColor: const Color(0xFF003262),
+      body: SafeArea(
+        child: Column(
+          children: [
+            const Spacer(flex: 1),
+            Expanded(
+              flex: 5,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.fromLTRB(24, 32, 24, 40),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(32),
+                    topRight: Radius.circular(32),
                   ),
+                ),
+                child: SingleChildScrollView(
+                  // Only scroll if keyboard opens or very small screen
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      // Register Now title
                       const Text(
                         "Register Now",
                         style: TextStyle(
@@ -49,7 +49,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       const SizedBox(height: 8),
                       const Text(
-                        "Create new Account to Register",
+                        "Create new account to register",
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.grey,
@@ -58,7 +58,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       const SizedBox(height: 32),
 
-                      // Email field
+                      // Email
                       const TextField(
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
@@ -72,7 +72,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       const SizedBox(height: 24),
 
-                      // Contract No (Contact number)
                       const TextField(
                         keyboardType: TextInputType.phone,
                         decoration: InputDecoration(
@@ -86,7 +85,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       const SizedBox(height: 24),
 
-                      // Address
                       const TextField(
                         decoration: InputDecoration(
                           labelText: "Address",
@@ -99,7 +97,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       const SizedBox(height: 24),
 
-                      // New Password with visibility toggle
                       TextField(
                         obscureText: _obscureNewPassword,
                         decoration: InputDecoration(
@@ -125,6 +122,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
                       const SizedBox(height: 24),
+
                       TextField(
                         obscureText: _obscureConfirmPassword,
                         decoration: InputDecoration(
@@ -151,10 +149,11 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
                       const SizedBox(height: 32),
+
                       ElevatedButton(
                         onPressed: () {},
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFFDB515), // Yellow
+                          backgroundColor: const Color(0xFFFDB515),
                           foregroundColor: Colors.black87,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
@@ -172,7 +171,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       const SizedBox(height: 24),
 
-                      // Not Register Yet? Login
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -183,20 +181,23 @@ class _RegisterPageState extends State<RegisterPage> {
                           InkWell(
                             onTap: () {
                               Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const LoginPage()));
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const LoginPage()),
+                              );
                             },
-                            child: const Text('Login',
-                                style: TextStyle(
-                                  color: Color(0xFFFDB515),
-                                )),
+                            child: const Text(
+                              'Login',
+                              style: TextStyle(
+                                color: Color(0xFFFDB515),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 16),
 
-                      // OR separator
                       const Row(
                         children: [
                           Expanded(child: Divider(color: Colors.grey)),
@@ -210,12 +211,13 @@ class _RegisterPageState extends State<RegisterPage> {
                           Expanded(child: Divider(color: Colors.grey)),
                         ],
                       ),
+                      const SizedBox(height: 24), // extra safe space at bottom
                     ],
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
