@@ -1,3 +1,4 @@
+import 'package:beyondfantasy/loginpage.dart';
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -124,8 +125,6 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
                       const SizedBox(height: 24),
-
-                      // Confirm Password with visibility toggle
                       TextField(
                         obscureText: _obscureConfirmPassword,
                         decoration: InputDecoration(
@@ -152,12 +151,8 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
                       const SizedBox(height: 32),
-
-                      // Register Button
                       ElevatedButton(
-                        onPressed: () {
-                          // TODO: Register logic (validate, call API, etc.)
-                        },
+                        onPressed: () {},
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFFDB515), // Yellow
                           foregroundColor: Colors.black87,
@@ -185,19 +180,17 @@ class _RegisterPageState extends State<RegisterPage> {
                             "Not Register Yet? ",
                             style: TextStyle(color: Colors.grey),
                           ),
-                          TextButton(
-                            onPressed: () {
-                              // TODO: Go to Login page
-                              Navigator.pop(
-                                  context); // Simple back to login example
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const LoginPage()));
                             },
-                            child: const Text(
-                              "Login",
-                              style: TextStyle(
-                                color: Color(0xFFFDB515),
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                            child: const Text('Login',
+                                style: TextStyle(
+                                  color: Color(0xFFFDB515),
+                                )),
                           ),
                         ],
                       ),

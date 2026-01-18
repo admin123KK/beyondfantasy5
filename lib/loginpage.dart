@@ -1,4 +1,5 @@
 import 'package:beyondfantasy/registerpage.dart';
+import 'package:beyondfantasy/resetpage.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -47,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 8),
+                    // const SizedBox(height: 8),
                     const Text(
                       "Login to your Account",
                       style: TextStyle(
@@ -59,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(height: 32),
 
                     // Email field
-                    TextField(
+                    const TextField(
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         labelText: "Email",
@@ -99,11 +100,14 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 8),
 
-                    // Forgot Password
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
                         onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ResetPasswordPage()));
                           // TODO: Forgot password logic
                         },
                         child: const Text(
@@ -119,9 +123,7 @@ class _LoginPageState extends State<LoginPage> {
 
                     // Login Button
                     ElevatedButton(
-                      onPressed: () {
-                        // TODO: Login logic
-                      },
+                      onPressed: () {},
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFFDB515), // Yellow
                         foregroundColor: Colors.black87,
@@ -154,7 +156,8 @@ class _LoginPageState extends State<LoginPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => RegisterPage()));
+                                    builder: (context) =>
+                                        const RegisterPage()));
                           },
                           child: const Text(
                             "Register",
