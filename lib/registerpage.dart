@@ -204,7 +204,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             child: Text(
-                              "Or",
+                              "OR",
                               style: TextStyle(color: Colors.grey),
                             ),
                           ),
