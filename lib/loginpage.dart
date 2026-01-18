@@ -1,3 +1,4 @@
+import 'package:beyondfantasy/homepage.dart';
 import 'package:beyondfantasy/registerpage.dart';
 import 'package:beyondfantasy/resetpage.dart';
 import 'package:flutter/material.dart';
@@ -11,17 +12,72 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _obscurePassword = true;
+  bool _isLoading = false; // to disable button during loading
+
+  Future<void> _handleLogin() async {
+    if (_isLoading) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    // Show loading dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false, // can't tap outside to close
+      builder: (BuildContext context) {
+        return const AlertDialog(
+          backgroundColor: Colors.white,
+          content: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(
+                color: Color(0xFF003262),
+                strokeWidth: 5,
+              ),
+              SizedBox(width: 20),
+              Text(
+                "Logging in...",
+                style: TextStyle(
+                  color: Color(0xFF003262),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    // Simulate delay (replace with real authentication later)
+    await Future.delayed(const Duration(seconds: 2));
+
+    // Close dialog
+    if (mounted && Navigator.canPop(context)) {
+      Navigator.pop(context); // close loading dialog
+    }
+
+    // Navigate to home
+    if (mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF003262), // Dark blue background
+      backgroundColor: const Color(0xFF003262),
       body: SafeArea(
         child: Stack(
           children: [
-            // Full background color (already set on Scaffold)
-
-            // White rounded card at bottom
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
@@ -38,7 +94,6 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // Welcome Back title
                     const Text(
                       "Welcome Back",
                       style: TextStyle(
@@ -48,7 +103,6 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    // const SizedBox(height: 8),
                     const Text(
                       "Login to your Account",
                       style: TextStyle(
@@ -65,15 +119,14 @@ class _LoginPageState extends State<LoginPage> {
                       decoration: InputDecoration(
                         labelText: "Email",
                         hintText: "enter your email address",
-                        labelStyle: const TextStyle(color: Colors.grey),
-                        border: const UnderlineInputBorder(),
-                        contentPadding:
-                            const EdgeInsets.symmetric(vertical: 12),
+                        labelStyle: TextStyle(color: Colors.grey),
+                        border: UnderlineInputBorder(),
+                        contentPadding: EdgeInsets.symmetric(vertical: 12),
                       ),
                     ),
                     const SizedBox(height: 24),
 
-                    // Password field with visibility toggle
+                    // Password field
                     TextField(
                       obscureText: _obscurePassword,
                       decoration: InputDecoration(
@@ -105,10 +158,11 @@ class _LoginPageState extends State<LoginPage> {
                       child: TextButton(
                         onPressed: () {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ResetPasswordPage()));
-                          // TODO: Forgot password logic
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ResetPasswordPage(),
+                            ),
+                          );
                         },
                         child: const Text(
                           "Forgot Password?",
@@ -121,11 +175,11 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 16),
 
-                    // Login Button
+                    // Login Button with loading state
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: _isLoading ? null : _handleLogin,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFFDB515), // Yellow
+                        backgroundColor: const Color(0xFFFDB515),
                         foregroundColor: Colors.black87,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
@@ -133,17 +187,26 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         elevation: 3,
                       ),
-                      child: const Text(
-                        "Login",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      child: _isLoading
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                color: Colors.black87,
+                                strokeWidth: 3,
+                              ),
+                            )
+                          : const Text(
+                              "Login",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                     ),
                     const SizedBox(height: 24),
 
-                    // Not Registered? Register
+                    // Register link
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -154,10 +217,11 @@ class _LoginPageState extends State<LoginPage> {
                         InkWell(
                           onTap: () {
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const RegisterPage()));
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const RegisterPage(),
+                              ),
+                            );
                           },
                           child: const Text(
                             "Register",
