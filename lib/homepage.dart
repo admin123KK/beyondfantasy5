@@ -6,14 +6,13 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          const Color(0xFF003262), // Full dark blue background like first image
+      backgroundColor: const Color(0xFF003262),
       appBar: AppBar(
         backgroundColor: const Color(0xFF003262),
         elevation: 0,
         leading: const Icon(Icons.menu, color: Colors.white, size: 28),
         title: const Text(
-          'Live Matches',
+          'Beyond Fantasy',
           style: TextStyle(
             color: Colors.white,
             fontSize: 18,
@@ -35,7 +34,6 @@ class HomePage extends StatelessWidget {
       ),
       body: Column(
         children: [
-          // White rounded container rising from bottom (like your auth screens)
           Expanded(
             child: Align(
               alignment: Alignment.bottomCenter,
@@ -54,7 +52,7 @@ class HomePage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Live Match
+                        // Live Match title
                         const Text(
                           'Live Match',
                           style: TextStyle(
@@ -67,81 +65,133 @@ class HomePage extends StatelessWidget {
 
                         // Live Match Card
                         Container(
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
                           decoration: BoxDecoration(
                             color: Colors.grey[100],
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Column(
                             children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                              Stack(
+                                clipBehavior: Clip.none,
+                                alignment: Alignment.center,
                                 children: [
                                   Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
-                                      CircleAvatar(
-                                        radius: 32,
-                                        backgroundColor: Colors.blue[900],
-                                        child: const Text(
-                                          'NP',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.bold,
+                                      // Nepal side
+                                      Row(
+                                        children: [
+                                          CircleAvatar(
+                                            radius: 32,
+                                            backgroundImage: const NetworkImage(
+                                              'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Flag_of_Nepal.svg/1200px-Flag_of_Nepal.svg.png',
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 12),
-                                      const Text(
-                                        'NEPAL',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const Text(
-                                    'VS',
-                                    style: TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color(0xFFFDB515),
-                                    ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Text(
-                                        'ENGLAND',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 12),
-                                      CircleAvatar(
-                                        radius: 32,
-                                        backgroundColor: Colors.red[900],
-                                        child: const Text(
-                                          'ENG',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.bold,
+                                          const SizedBox(width: 12),
+                                          const Text(
+                                            'NEPAL',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
+                                        ],
+                                      ),
+
+                                      // VS
+                                      const Text(
+                                        'VS',
+                                        style: TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                          color: Color(0xFFFDB515),
                                         ),
+                                      ),
+
+                                      // England side with LIVE badge above avatar
+                                      Stack(
+                                        alignment: Alignment.topCenter,
+                                        clipBehavior: Clip.none,
+                                        children: [
+                                          Column(
+                                            children: [
+                                              const SizedBox(
+                                                  height:
+                                                      18), // space for badge above
+                                              Row(
+                                                children: [
+                                                  const Text(
+                                                    'ENGLAND',
+                                                    style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 12),
+                                                  CircleAvatar(
+                                                    radius: 32,
+                                                    backgroundImage:
+                                                        const NetworkImage(
+                                                      'https://upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/1200px-Flag_of_England.svg.png',
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+
+                                          // LIVE badge positioned above England avatar
+                                          Positioned(
+                                            top: -10,
+                                            right: 0,
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                horizontal: 10,
+                                                vertical: 4,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: Colors.red,
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.red
+                                                        .withOpacity(0.4),
+                                                    blurRadius: 6,
+                                                    offset: const Offset(0, 2),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: const Text(
+                                                'LIVE',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 11,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 16),
-                              Row(
+
+                              const SizedBox(height: 24),
+
+                              // Scores
+                              const Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
-                                children: const [
+                                children: [
                                   Column(
                                     children: [
                                       Text(
@@ -176,41 +226,27 @@ class HomePage extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 16),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 8),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF003262),
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(20),
-                                      topRight: Radius.circular(20)),
-                                ),
-                                child: const Text(
-                                  'ICC Men\'s T20 World Cup',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
+
+                              const SizedBox(height: 24),
+
+                              // ICC tag at bottom
+                              Center(
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 24, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF003262),
+                                    borderRadius: BorderRadius.circular(30),
                                   ),
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Icon(Icons.circle,
-                                      color: Colors.red, size: 10),
-                                  SizedBox(width: 6),
-                                  Text(
-                                    'LIVE',
+                                  child: const Text(
+                                    'ICC Men\'s T20 World Cup',
                                     style: TextStyle(
-                                      color: Colors.red,
-                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
                                       fontSize: 14,
+                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                ],
+                                ),
                               ),
                             ],
                           ),
@@ -246,15 +282,23 @@ class HomePage extends StatelessWidget {
                             children: [
                               _buildUpcomingMatchCard(
                                 league: 'T20 World Cup',
+                                team1Flag:
+                                    'https://upload.wikimedia.org/wikipedia/commons/3/3e/Flag_of_New_Zealand.svg',
                                 team1: 'NEWZEALAND',
+                                team2Flag:
+                                    'https://upload.wikimedia.org/wikipedia/commons/1/11/Flag_of_Sri_Lanka.svg',
                                 team2: 'SRILANKA',
                                 time: '10h 10min',
                               ),
                               const SizedBox(width: 16),
                               _buildUpcomingMatchCard(
                                 league: 'T20 World Cup',
+                                team1Flag:
+                                    'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Flag_of_Nepal.svg/1200px-Flag_of_Nepal.svg.png',
                                 team1: 'NEPAL',
-                                team2: 'T20 WORLD',
+                                team2Flag:
+                                    'https://upload.wikimedia.org/wikipedia/commons/1/11/Flag_of_Sri_Lanka.svg',
+                                team2: 'SRILANKA',
                                 time: 'Upcoming',
                               ),
                             ],
@@ -318,8 +362,6 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-
-      // Bottom yellow navigation bar
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: const Color(0xFFFDB515),
         selectedItemColor: Colors.black87,
@@ -344,7 +386,9 @@ class HomePage extends StatelessWidget {
 
   Widget _buildUpcomingMatchCard({
     required String league,
+    required String team1Flag,
     required String team1,
+    required String team2Flag,
     required String team2,
     required String time,
   }) {
@@ -366,23 +410,26 @@ class HomePage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(
-                team1,
-                style:
-                    const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              CircleAvatar(
+                radius: 24,
+                backgroundImage: NetworkImage(team1Flag),
               ),
               const Text(
                 'vs',
                 style: TextStyle(fontSize: 16, color: Color(0xFFFDB515)),
               ),
-              Text(
-                team2,
-                style:
-                    const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              CircleAvatar(
+                radius: 24,
+                backgroundImage: NetworkImage(team2Flag),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
+          Text(
+            '$team1 vs $team2',
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 4),
           Text(
             time,
             style: const TextStyle(fontSize: 13, color: Colors.grey),
