@@ -1,3 +1,4 @@
+import 'package:beyondfantasy/fantasyselection.dart';
 import 'package:flutter/material.dart';
 
 class GameSchedulePage extends StatelessWidget {
@@ -188,7 +189,10 @@ class GameSchedulePage extends StatelessWidget {
                   alignment: Alignment.centerRight,
                   child: ElevatedButton(
                     onPressed: () {
-                      // TODO: Navigate to Create Team page
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => FantasySelect()));
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                             content: Text('Opening Team Creator...')),
