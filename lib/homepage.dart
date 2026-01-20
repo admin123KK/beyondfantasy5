@@ -40,7 +40,7 @@ class HomePage extends StatelessWidget {
               child: Container(
                 width: double.infinity,
                 decoration: const BoxDecoration(
-                  color: Colors.white,
+                  color: Color(0xFFEAECED),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(32),
                     topRight: Radius.circular(32),
@@ -67,7 +67,7 @@ class HomePage extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
                           decoration: BoxDecoration(
-                            color: Colors.grey[100],
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Column(
@@ -83,7 +83,7 @@ class HomePage extends StatelessWidget {
                                         CrossAxisAlignment.center,
                                     children: [
                                       // Nepal side
-                                      Row(
+                                      const Row(
                                         children: [
                                           CircleAvatar(
                                             radius: 32,
@@ -95,7 +95,7 @@ class HomePage extends StatelessWidget {
                                           const Text(
                                             'NEPAL',
                                             style: TextStyle(
-                                              fontSize: 18,
+                                              fontSize: 16,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
@@ -106,7 +106,7 @@ class HomePage extends StatelessWidget {
                                       const Text(
                                         'VS',
                                         style: TextStyle(
-                                          fontSize: 24,
+                                          fontSize: 22,
                                           fontWeight: FontWeight.bold,
                                           color: Color(0xFFFDB515),
                                         ),
@@ -117,17 +117,17 @@ class HomePage extends StatelessWidget {
                                         alignment: Alignment.topCenter,
                                         clipBehavior: Clip.none,
                                         children: [
-                                          Column(
+                                          const Column(
                                             children: [
                                               const SizedBox(
                                                   height:
-                                                      18), // space for badge above
+                                                      10), // space for badge above
                                               Row(
                                                 children: [
                                                   const Text(
                                                     'ENGLAND',
                                                     style: TextStyle(
-                                                      fontSize: 18,
+                                                      fontSize: 16,
                                                       fontWeight:
                                                           FontWeight.bold,
                                                     ),
@@ -147,7 +147,7 @@ class HomePage extends StatelessWidget {
 
                                           // LIVE badge positioned above England avatar
                                           Positioned(
-                                            top: -10,
+                                            top: -20,
                                             right: 0,
                                             child: Container(
                                               padding:
@@ -236,7 +236,9 @@ class HomePage extends StatelessWidget {
                                       horizontal: 24, vertical: 8),
                                   decoration: BoxDecoration(
                                     color: const Color(0xFF003262),
-                                    borderRadius: BorderRadius.circular(30),
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(20),
+                                        topRight: Radius.circular(20)),
                                   ),
                                   child: const Text(
                                     'ICC Men\'s T20 World Cup',
@@ -252,7 +254,7 @@ class HomePage extends StatelessWidget {
                           ),
                         ),
 
-                        const SizedBox(height: 32),
+                        const SizedBox(height: 20),
 
                         // Upcoming Matches
                         Row(
@@ -331,10 +333,10 @@ class HomePage extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: Colors.grey[100],
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(16),
                           ),
-                          child: Column(
+                          child: const Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: const [
                               Text(
@@ -396,7 +398,7 @@ class HomePage extends StatelessWidget {
       width: 220,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.grey[100],
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -404,7 +406,7 @@ class HomePage extends StatelessWidget {
         children: [
           Text(
             league,
-            style: const TextStyle(fontSize: 13, color: Colors.grey),
+            style: const TextStyle(fontSize: 13, color: Color(0xFF003262)),
           ),
           const SizedBox(height: 8),
           Row(
@@ -416,7 +418,7 @@ class HomePage extends StatelessWidget {
               ),
               const Text(
                 'vs',
-                style: TextStyle(fontSize: 16, color: Color(0xFFFDB515)),
+                style: TextStyle(fontSize: 14, color: Color(0xFFFDB515)),
               ),
               CircleAvatar(
                 radius: 24,
@@ -426,13 +428,18 @@ class HomePage extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            '$team1 vs $team2',
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            '$team1          $team2',
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 4),
-          Text(
-            time,
-            style: const TextStyle(fontSize: 13, color: Colors.grey),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                time,
+                style: const TextStyle(fontSize: 10, color: Colors.green),
+              ),
+            ],
           ),
         ],
       ),
