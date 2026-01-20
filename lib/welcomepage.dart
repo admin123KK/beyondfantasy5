@@ -16,7 +16,7 @@ class _WelcomepageState extends State<Welcomepage> {
       body: SafeArea(
         child: Column(
           children: [
-            Padding(
+            const Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 60),
               child: Column(
                 children: [

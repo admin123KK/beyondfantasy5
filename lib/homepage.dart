@@ -1,4 +1,5 @@
 import 'package:beyondfantasy/rankingpage.dart';
+import 'package:beyondfantasy/schedulepage.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -379,10 +380,18 @@ class HomePage extends StatelessWidget {
         type: BottomNavigationBarType.fixed,
         currentIndex: 0,
         items: [
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
               icon: Icon(Icons.home, size: 28), label: 'Home'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.sports_cricket, size: 28), label: 'Matches'),
+              icon: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => GameSchedulePage()));
+                  },
+                  child: const Icon(Icons.sports_cricket, size: 28)),
+              label: 'Matches'),
           BottomNavigationBarItem(
               icon: InkWell(
                   onTap: () {
@@ -391,7 +400,7 @@ class HomePage extends StatelessWidget {
                   },
                   child: Icon(Icons.stacked_bar_chart_outlined, size: 28)),
               label: 'Calendar'),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
               icon: Icon(Icons.person, size: 28), label: 'Profile'),
         ],
       ),
