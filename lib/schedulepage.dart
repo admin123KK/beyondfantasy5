@@ -5,66 +5,42 @@ class GameSchedulePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Sample matches (Nepal Premier League + World Cup style)
     final List<Map<String, String>> matches = [
       {
-        'teamA': 'Nepal',
-        'teamB': 'England',
-        'date': '11/17/2025',
-        'ground': 'TU Ground, Kathmandu',
+        'teamA': 'Karnali Yaks',
+        'teamB': 'Janakpur Bolts',
+        'date': '12/7/2025, 3:30 PM',
+        'ground': 'Kirtipur',
+        'league': 'Nepal Premier League 2025',
       },
       {
-        'teamA': 'India',
-        'teamB': 'Pakistan',
-        'date': '11/18/2025',
-        'ground': 'Kirtipur International Cricket Stadium',
+        'teamA': 'Kathmandu Gorkhas',
+        'teamB': 'Pokhara Avengers',
+        'date': '12/8/2025, 7:00 PM',
+        'ground': 'TU Ground',
+        'league': 'Nepal Premier League 2025',
+      },
+      {
+        'teamA': 'Nepal',
+        'teamB': 'India',
+        'date': '12/10/2025, 2:00 PM',
+        'ground': 'Kirtipur',
+        'league': 'ICC T20 World Cup',
       },
       {
         'teamA': 'Australia',
-        'teamB': 'New Zealand',
-        'date': '11/19/2025',
+        'teamB': 'England',
+        'date': '12/11/2025, 7:30 PM',
         'ground': 'Kirtipur',
-      },
-      {
-        'teamA': 'South Africa',
-        'teamB': 'West Indies',
-        'date': '11/20/2025',
-        'ground': 'TU Ground',
+        'league': 'ICC T20 World Cup',
       },
       {
         'teamA': 'Sri Lanka',
         'teamB': 'Bangladesh',
-        'date': '11/21/2025',
-        'ground': 'Kirtipur',
-      },
-      {
-        'teamA': 'Afghanistan',
-        'teamB': 'Ireland',
-        'date': '11/22/2025',
-        'ground': 'Mulpani Cricket Ground',
-      },
-      {
-        'teamA': 'Nepal',
-        'teamB': 'Scotland',
-        'date': '11/23/2025',
-        'ground': 'TU Ground',
-      },
-      {
-        'teamA': 'USA',
-        'teamB': 'Canada',
-        'date': '11/24/2025',
-        'ground': 'Kirtipur',
-      },
-      {
-        'teamA': 'Oman',
-        'teamB': 'Namibia',
-        'date': '11/25/2025',
+        'date': '12/12/2025, 3:00 PM',
         'ground': 'Mulpani',
-      },
-      {
-        'teamA': 'Netherlands',
-        'teamB': 'Uganda',
-        'date': '11/26/2025',
-        'ground': 'TU Ground',
+        'league': 'ICC T20 World Cup',
       },
     ];
 
@@ -74,7 +50,7 @@ class GameSchedulePage extends StatelessWidget {
         backgroundColor: const Color(0xFF003262),
         elevation: 0,
         title: const Text(
-          'T20 World Cup Schedule',
+          'Match Schedule',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         leading: const Icon(Icons.arrow_back, color: Colors.white),
@@ -84,26 +60,44 @@ class GameSchedulePage extends StatelessWidget {
         itemCount: matches.length,
         itemBuilder: (context, index) {
           final match = matches[index];
-          final isEven = index % 2 == 0;
 
           return Container(
             margin: const EdgeInsets.only(bottom: 16),
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFF1A2A44), // Dark navy card
-              borderRadius: BorderRadius.circular(16),
+              color: const Color(0xFF1A2A44),
+              borderRadius: BorderRadius.circular(20),
               border: Border.all(color: Colors.white.withOpacity(0.08)),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.4),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
+                  color: Colors.black.withOpacity(0.35),
+                  blurRadius: 12,
+                  offset: const Offset(0, 6),
                 ),
               ],
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Date & Time
+                Row(
+                  children: [
+                    const Icon(Icons.access_time,
+                        color: Color(0xFFFDB515), size: 18),
+                    const SizedBox(width: 6),
+                    Text(
+                      match['date']!,
+                      style: const TextStyle(
+                        color: Color(0xFFFDB515),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+
+                // Teams VS
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -113,7 +107,7 @@ class GameSchedulePage extends StatelessWidget {
                         match['teamA']!,
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 18,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
                         overflow: TextOverflow.ellipsis,
@@ -121,16 +115,16 @@ class GameSchedulePage extends StatelessWidget {
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 9),
+                          horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
                         color: Colors.redAccent,
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(24),
                       ),
                       child: const Text(
                         'VS',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 14,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -141,7 +135,7 @@ class GameSchedulePage extends StatelessWidget {
                         textAlign: TextAlign.right,
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 18,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
                         overflow: TextOverflow.ellipsis,
@@ -149,41 +143,76 @@ class GameSchedulePage extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
+
+                // League + Ground
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
-                        const Icon(Icons.calendar_month,
-                            color: Color(0xFFFDB515), size: 20),
-                        const SizedBox(width: 8),
+                        const Icon(Icons.emoji_events,
+                            color: Color(0xFFFDB515), size: 18),
+                        const SizedBox(width: 6),
                         Text(
-                          match['date']!,
+                          match['league']!,
                           style: const TextStyle(
                             color: Color(0xFFFDB515),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ],
                     ),
                     Row(
                       children: [
-                        const Icon(Icons.stadium,
-                            color: Color(0xFFFDB515), size: 20),
-                        const SizedBox(width: 8),
+                        const Icon(Icons.location_on,
+                            color: Color(0xFFFDB515), size: 18),
+                        const SizedBox(width: 6),
                         Text(
                           match['ground']!,
                           style: const TextStyle(
                             color: Color(0xFFFDB515),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ],
                     ),
                   ],
+                ),
+                const SizedBox(height: 16),
+
+                // Small cute Create Fantasy Team button
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // TODO: Navigate to Create Team page
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('Opening Team Creator...')),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFFDB515),
+                      foregroundColor: Colors.black87,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      minimumSize: const Size(0, 40), // compact size
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      elevation: 3,
+                    ),
+                    child: const Text(
+                      'Create Fantasy Team ',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
