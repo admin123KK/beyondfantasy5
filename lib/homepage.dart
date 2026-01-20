@@ -1,3 +1,4 @@
+import 'package:beyondfantasy/rankingpage.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -234,7 +235,7 @@ class HomePage extends StatelessWidget {
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 24, vertical: 8),
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                     color: const Color(0xFF003262),
                                     borderRadius: BorderRadius.only(
                                         topLeft: Radius.circular(20),
@@ -331,6 +332,7 @@ class HomePage extends StatelessWidget {
                         ),
                         const SizedBox(height: 12),
                         Container(
+                          height: 350,
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -339,6 +341,11 @@ class HomePage extends StatelessWidget {
                           child: const Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: const [
+                              Image(
+                                image: NetworkImage(
+                                    'https://media.cricnepal.com/assets/Nepal-men-team-acknowledge-fans.webp'),
+                                fit: BoxFit.fill,
+                              ),
                               Text(
                                 'Nepal eyes big win Over England on their first T20 World Cup',
                                 style: TextStyle(
@@ -346,11 +353,10 @@ class HomePage extends StatelessWidget {
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
-                              SizedBox(height: 8),
                               Text(
                                 '10min ago',
                                 style:
-                                    TextStyle(color: Colors.grey, fontSize: 13),
+                                    TextStyle(color: Colors.grey, fontSize: 12),
                               ),
                             ],
                           ),
@@ -372,13 +378,19 @@ class HomePage extends StatelessWidget {
         showUnselectedLabels: false,
         type: BottomNavigationBarType.fixed,
         currentIndex: 0,
-        items: const [
+        items: [
           BottomNavigationBarItem(
               icon: Icon(Icons.home, size: 28), label: 'Home'),
           BottomNavigationBarItem(
               icon: Icon(Icons.sports_cricket, size: 28), label: 'Matches'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today, size: 28), label: 'Calendar'),
+              icon: InkWell(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => RankingPage()));
+                  },
+                  child: Icon(Icons.stacked_bar_chart_outlined, size: 28)),
+              label: 'Calendar'),
           BottomNavigationBarItem(
               icon: Icon(Icons.person, size: 28), label: 'Profile'),
         ],
