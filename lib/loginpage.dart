@@ -1,7 +1,13 @@
-import 'package:beyondfantasy/homepage.dart';
-import 'package:beyondfantasy/registerpage.dart';
-import 'package:beyondfantasy/resetpage.dart';
+import 'dart:convert';
+
+import 'package:beyondfantasy/api.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'homepage.dart';
+import 'registerpage.dart';
+import 'resetpage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -11,64 +17,129 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
   bool _obscurePassword = true;
-  bool _isLoading = false; // to disable button during loading
+  bool _isLoading = false;
 
   Future<void> _handleLogin() async {
     if (_isLoading) return;
 
-    setState(() {
-      _isLoading = true;
-    });
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter email and password')),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
 
     // Show loading dialog
     showDialog(
       context: context,
-      barrierDismissible: false, // can't tap outside to close
-      builder: (BuildContext context) {
-        return const AlertDialog(
-          backgroundColor: Colors.white,
-          content: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(
+      barrierDismissible: false,
+      builder: (context) => const AlertDialog(
+        backgroundColor: Colors.white,
+        content: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            CircularProgressIndicator(
+              color: Color(0xFF003262),
+              strokeWidth: 5,
+            ),
+            SizedBox(width: 20),
+            Text(
+              "Logging in...",
+              style: TextStyle(
                 color: Color(0xFF003262),
-                strokeWidth: 5,
+                fontWeight: FontWeight.w600,
               ),
-              SizedBox(width: 20),
-              Text(
-                "Logging in...",
-                style: TextStyle(
-                  color: Color(0xFF003262),
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+            ),
+          ],
+        ),
+      ),
     );
 
-    // Simulate delay (replace with real authentication later)
-    await Future.delayed(const Duration(seconds: 2));
-
-    // Close dialog
-    if (mounted && Navigator.canPop(context)) {
-      Navigator.pop(context); // close loading dialog
-    }
-
-    // Navigate to home
-    if (mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
+    try {
+      final response = await http.post(
+        Uri.parse(ApiConstants.loginEndPoint),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode({
+          "email": email,
+          "password": password,
+        }),
       );
-    }
 
-    setState(() {
-      _isLoading = false;
-    });
+      // Close loading dialog
+      if (mounted && Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = jsonDecode(response.body);
+        final token = data['token'] ??
+            data['access_token'] ??
+            data['jwt'] ??
+            data['bearer_token'];
+
+        if (token != null && token.toString().isNotEmpty) {
+          // Save bearer token
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('auth_token', token.toString());
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Login successful! Redirecting...'),
+              backgroundColor: Colors.green,
+            ),
+          );
+
+          // Wait 2 seconds then go to home
+          await Future.delayed(const Duration(seconds: 2));
+
+          if (mounted) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const HomePage()),
+            );
+          }
+        } else {
+          throw Exception('No valid token received from server');
+        }
+      } else {
+        final errorData = jsonDecode(response.body);
+        final errorMsg = errorData['message'] ??
+            errorData['error'] ??
+            'Invalid email or password. Please try again.';
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMsg),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted && Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Login failed: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -112,11 +183,10 @@ class _LoginPageState extends State<LoginPage> {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 32),
-
-                    // Email field
-                    const TextField(
+                    TextField(
+                      controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: "Email",
                         hintText: "enter your email address",
                         labelStyle: TextStyle(color: Colors.grey),
@@ -125,9 +195,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     const SizedBox(height: 24),
-
-                    // Password field
                     TextField(
+                      controller: _passwordController,
                       obscureText: _obscurePassword,
                       decoration: InputDecoration(
                         labelText: "Password",
@@ -152,7 +221,6 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     const SizedBox(height: 8),
-
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
@@ -160,8 +228,7 @@ class _LoginPageState extends State<LoginPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const ResetPasswordPage(),
-                            ),
+                                builder: (_) => const ResetPasswordPage()),
                           );
                         },
                         child: const Text(
@@ -174,8 +241,6 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-
-                    // Login Button with loading state
                     ElevatedButton(
                       onPressed: _isLoading ? null : _handleLogin,
                       style: ElevatedButton.styleFrom(
@@ -205,8 +270,6 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                     ),
                     const SizedBox(height: 24),
-
-                    // Register link
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -219,8 +282,7 @@ class _LoginPageState extends State<LoginPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const RegisterPage(),
-                              ),
+                                  builder: (_) => const RegisterPage()),
                             );
                           },
                           child: const Text(
@@ -234,8 +296,6 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                     ),
                     const SizedBox(height: 16),
-
-                    // OR separator
                     const Row(
                       children: [
                         Expanded(child: Divider(color: Colors.grey)),
