@@ -34,7 +34,11 @@ class _RankingPageState extends State<RankingPage>
           'Rankings',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        leading: const Icon(Icons.arrow_back, color: Colors.white),
+        leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: const Icon(Icons.arrow_back, color: Colors.white)),
       ),
       body: Column(
         children: [

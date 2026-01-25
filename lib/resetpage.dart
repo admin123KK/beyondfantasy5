@@ -11,21 +11,18 @@ class ResetPasswordPage extends StatefulWidget {
 }
 
 class _ResetPasswordPageState extends State<ResetPasswordPage> {
-  // For email step
   final _emailController = TextEditingController();
 
-  // For OTP step
   final List<TextEditingController> _otpControllers =
       List.generate(6, (_) => TextEditingController());
   final List<FocusNode> _otpFocusNodes = List.generate(6, (_) => FocusNode());
 
-  bool _isEmailStep = true; // true = email input, false = OTP input
+  bool _isEmailStep = true;
   bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    // Auto-focus first OTP box when switching to OTP step
     for (int i = 0; i < 6; i++) {
       _otpControllers[i].addListener(() {
         if (_otpControllers[i].text.length == 1 && i < 5) {
@@ -80,11 +77,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
     setState(() => _isLoading = true);
 
-    // Show loading dialog
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => AlertDialog(
+      builder: (context) => const AlertDialog(
         backgroundColor: Colors.white,
         content: Row(
           mainAxisSize: MainAxisSize.min,
@@ -97,13 +93,11 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       ),
     );
 
-    // Simulate verification delay
     await Future.delayed(const Duration(seconds: 2));
 
     if (mounted) {
-      Navigator.pop(context); // close loading dialog
+      Navigator.pop(context);
 
-      // Success
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Verification successful!'),
@@ -111,7 +105,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         ),
       );
 
-      // Wait a moment then go back to login
       await Future.delayed(const Duration(seconds: 1));
 
       if (mounted) {
@@ -217,7 +210,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                       ),
                       const SizedBox(height: 40),
                       if (_isEmailStep) ...[
-                        // Email step
                         TextField(
                           controller: _emailController,
                           keyboardType: TextInputType.emailAddress,
@@ -230,7 +222,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                           ),
                         ),
                         const SizedBox(height: 40),
-
                         ElevatedButton(
                           onPressed: _isLoading ? null : _sendCode,
                           style: ElevatedButton.styleFrom(

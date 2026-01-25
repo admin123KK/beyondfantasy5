@@ -311,7 +311,6 @@ class HomePage extends StatelessWidget {
 
                         const SizedBox(height: 32),
 
-                        // Trending News
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [

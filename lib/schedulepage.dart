@@ -6,7 +6,7 @@ class GameSchedulePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Sample matches (Nepal Premier League + World Cup style)
+    // Sample matches
     final List<Map<String, String>> matches = [
       {
         'teamA': 'Karnali Yaks',
@@ -54,7 +54,12 @@ class GameSchedulePage extends StatelessWidget {
           'Match Schedule',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        leading: const Icon(Icons.arrow_back, color: Colors.white),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context); // This makes the back button work!
+          },
+        ),
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16),
@@ -108,7 +113,7 @@ class GameSchedulePage extends StatelessWidget {
                         match['teamA']!,
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 20,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                         overflow: TextOverflow.ellipsis,
@@ -116,7 +121,7 @@ class GameSchedulePage extends StatelessWidget {
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 18, vertical: 8),
+                          horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
                         color: Colors.redAccent,
                         borderRadius: BorderRadius.circular(24),
@@ -125,7 +130,7 @@ class GameSchedulePage extends StatelessWidget {
                         'VS',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 14,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -136,7 +141,7 @@ class GameSchedulePage extends StatelessWidget {
                         textAlign: TextAlign.right,
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 20,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                         overflow: TextOverflow.ellipsis,
@@ -190,9 +195,10 @@ class GameSchedulePage extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => FantasySelect()));
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const FantasySelect()),
+                      );
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                             content: Text('Opening Team Creator...')),
@@ -202,17 +208,17 @@ class GameSchedulePage extends StatelessWidget {
                       backgroundColor: const Color(0xFFFDB515),
                       foregroundColor: Colors.black87,
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                      minimumSize: const Size(0, 40), // compact size
+                          horizontal: 16, vertical: 8),
+                      minimumSize: const Size(0, 36), // smaller & cuter
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      elevation: 3,
+                      elevation: 2,
                     ),
                     child: const Text(
-                      'Create Fantasy Team ',
+                      'Create Team',
                       style: TextStyle(
-                        fontSize: 10,
+                        fontSize: 12,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
