@@ -87,7 +87,6 @@ class _FantasySelectState extends State<FantasySelect> {
       ),
       body: Column(
         children: [
-          // Team selection area
           Expanded(
             child: Row(
               children: [
@@ -97,12 +96,13 @@ class _FantasySelectState extends State<FantasySelect> {
                     team: teamA,
                     teamName: 'Nepal',
                     teamIndex: 0,
-                    accentColor: const Color(0xFF003262),
                   ),
                 ),
 
-                // Vertical divider
-                Container(width: 1, color: Colors.white.withOpacity(0.15)),
+                // Vertical divider with yellow tint
+                Container(
+                    width: 1.5,
+                    color: const Color(0xFFFDB515).withOpacity(0.3)),
 
                 // Team B (Right)
                 Expanded(
@@ -110,95 +110,102 @@ class _FantasySelectState extends State<FantasySelect> {
                     team: teamB,
                     teamName: 'England',
                     teamIndex: 1,
-                    accentColor: const Color(0xFF003262),
                   ),
                 ),
               ],
             ),
           ),
 
-          // Bottom fixed bar
+          // Fixed bottom bar with yellow gradient
           Container(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-            decoration: BoxDecoration(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  const Color(0xFF1A2A44),
-                  const Color(0xFF0F1E33),
+                  Color(0xFF1A2A44),
+                  Color(0xFF0D1B2E),
                 ],
               ),
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(24)),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.4),
-                  blurRadius: 12,
-                  offset: const Offset(0, -4),
+                  color: Colors.black45,
+                  blurRadius: 16,
+                  offset: Offset(0, -6),
                 ),
               ],
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Selected: $selectedCount / 11',
-                      style: TextStyle(
-                        color: selectedCount == 11
-                            ? Colors.greenAccent
-                            : Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+            child: SafeArea(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFDB515).withOpacity(0.25),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          'Selected: $selectedCount / 11',
+                          style: TextStyle(
+                            color: selectedCount == 11
+                                ? const Color(0xFFFDB515)
+                                : Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        'A: $teamASelected • B: $teamBSelected',
+                        style: const TextStyle(
+                            color: Colors.white70, fontSize: 13),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 56,
+                    child: ElevatedButton.icon(
+                      onPressed: canCreateTeam
+                          ? () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Team Created Successfully!'),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                              // TODO: Save team & navigate to contest/join
+                            }
+                          : null,
+                      icon: const Icon(Icons.check_circle_outline, size: 22),
+                      label: Text(
+                        canCreateTeam
+                            ? 'Create & Join Contest'
+                            : 'Select 11 Players',
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: canCreateTeam
+                            ? const Color(0xFFFDB515)
+                            : Colors.grey[700],
+                        foregroundColor: Colors.black87,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)),
+                        elevation: canCreateTeam ? 8 : 0,
                       ),
                     ),
-                    Text(
-                      'Team A: $teamASelected / 7 • Team B: $teamBSelected / 7',
-                      style:
-                          const TextStyle(color: Colors.white70, fontSize: 12),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  height: 56,
-                  child: ElevatedButton.icon(
-                    onPressed: canCreateTeam
-                        ? () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content:
-                                    Text('Team Created! Ready to join contest'),
-                                backgroundColor: Colors.green,
-                              ),
-                            );
-                            // TODO: Save team & navigate to contest
-                          }
-                        : null,
-                    icon: const Icon(Icons.check_circle, size: 20),
-                    label: Text(
-                      canCreateTeam
-                          ? 'Create Team & Join'
-                          : 'Select 11 Players',
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: canCreateTeam
-                          ? const Color(0xFFFDB515)
-                          : Colors.grey[600],
-                      foregroundColor: Colors.black87,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30)),
-                      elevation: canCreateTeam ? 6 : 0,
-                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
@@ -210,32 +217,50 @@ class _FantasySelectState extends State<FantasySelect> {
     required List<Map<String, dynamic>> team,
     required String teamName,
     required int teamIndex,
-    required Color accentColor,
   }) {
     final selectedInTeam = team.where((p) => p['selected']).length;
 
     return Column(
       children: [
-        // Team Header
+        // Team Header with yellow accent
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 14),
+          padding: const EdgeInsets.symmetric(vertical: 16),
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                accentColor,
-                accentColor.withOpacity(0.7),
-              ],
-            ),
+            color: const Color(0xFF1A2A44),
+            border: Border(
+                bottom: BorderSide(color: const Color(0xFFFDB515), width: 3)),
           ),
           child: Center(
-            child: Text(
-              '$teamName ($selectedInTeam/7)',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  teamName,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFDB515),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    '$selectedInTeam / 7',
+                    style: const TextStyle(
+                      color: Colors.black87,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -243,7 +268,7 @@ class _FantasySelectState extends State<FantasySelect> {
         // Player List
         Expanded(
           child: ListView.builder(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(12),
             itemCount: team.length,
             itemBuilder: (context, i) {
               final player = team[i];
@@ -260,7 +285,7 @@ class _FantasySelectState extends State<FantasySelect> {
     final isSelected = player['selected'] as bool;
     final role = player['role'] as String;
 
-    Color roleColor;
+    Color roleColor = Colors.grey;
     switch (role) {
       case 'BAT':
         roleColor = Colors.blueAccent;
@@ -274,30 +299,28 @@ class _FantasySelectState extends State<FantasySelect> {
       case 'WK':
         roleColor = Colors.orangeAccent;
         break;
-      default:
-        roleColor = Colors.grey;
     }
 
     return GestureDetector(
       onTap: () => togglePlayer(teamIndex, index),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 180),
         margin: const EdgeInsets.symmetric(vertical: 6),
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 14),
         decoration: BoxDecoration(
           color: isSelected
-              ? roleColor.withOpacity(0.25)
+              ? roleColor.withOpacity(0.18)
               : const Color(0xFF1A2A44),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isSelected ? roleColor : Colors.transparent,
-            width: 1.5,
+            color: isSelected ? const Color(0xFFFDB515) : Colors.transparent,
+            width: 1.8,
           ),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: roleColor.withOpacity(0.4),
-                    blurRadius: 8,
+                    color: const Color(0xFFFDB515).withOpacity(0.35),
+                    blurRadius: 10,
                     spreadRadius: 2,
                   ),
                 ]
@@ -307,31 +330,32 @@ class _FantasySelectState extends State<FantasySelect> {
           children: [
             // Role Badge
             Container(
-              width: 40,
-              height: 40,
+              width: 42,
+              height: 42,
               decoration: BoxDecoration(
-                color: roleColor.withOpacity(0.3),
+                color: roleColor.withOpacity(0.25),
                 shape: BoxShape.circle,
+                border: Border.all(color: roleColor, width: 1.5),
               ),
               alignment: Alignment.center,
               child: Text(
                 role,
                 style: TextStyle(
                   color: roleColor,
-                  fontSize: 12,
+                  fontSize: 13,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 14),
 
             // Player Name
             Expanded(
               child: Text(
                 player['name'],
                 style: TextStyle(
-                  color: isSelected ? roleColor : Colors.white,
-                  fontSize: 15,
+                  color: isSelected ? const Color(0xFFFDB515) : Colors.white,
+                  fontSize: 16,
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                 ),
               ),
@@ -340,7 +364,7 @@ class _FantasySelectState extends State<FantasySelect> {
             // Selection Indicator
             if (isSelected)
               const Icon(Icons.check_circle,
-                  color: Color(0xFFFDB515), size: 24),
+                  color: Color(0xFFFDB515), size: 26),
           ],
         ),
       ),
