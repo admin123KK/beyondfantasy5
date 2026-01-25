@@ -87,55 +87,52 @@ class _FantasySelectState extends State<FantasySelect> {
       ),
       body: Column(
         children: [
-          Expanded(
-            child: Row(
-              children: [
-                // Team A (Left)
-                Expanded(
-                  child: _buildTeamColumn(
-                    team: teamA,
-                    teamName: 'Nepal',
-                    teamIndex: 0,
+          // Match Info Header (new - shows on top of team selection)
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            color: const Color(0xFF1A2A44),
+            child: Column(
+              children: const [
+                Text(
+                  'Nepal vs India',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-
-                // Vertical divider with yellow tint
-                Container(
-                    width: 1.5,
-                    color: const Color(0xFFFDB515).withOpacity(0.3)),
-
-                // Team B (Right)
-                Expanded(
-                  child: _buildTeamColumn(
-                    team: teamB,
-                    teamName: 'England',
-                    teamIndex: 1,
-                  ),
+                SizedBox(height: 8),
+                Text(
+                  '12/10/2025, 2:00 PM • Kirtipur • ICC T20 World Cup',
+                  style: TextStyle(color: Color(0xFFFDB515), fontSize: 14),
                 ),
               ],
             ),
           ),
 
-          // Fixed bottom bar with yellow gradient
+          Expanded(
+            child: Row(
+              children: [
+                Expanded(child: _buildTeamColumn(teamA, 'Nepal', 0)),
+                Container(
+                    width: 1.5,
+                    color: const Color(0xFFFDB515).withOpacity(0.3)),
+                Expanded(child: _buildTeamColumn(teamB, 'India', 1)),
+              ],
+            ),
+          ),
+
+          // Bottom fixed bar
           Container(
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [
-                  Color(0xFF1A2A44),
-                  Color(0xFF0D1B2E),
-                ],
+                colors: [Color(0xFF1A2A44), Color(0xFF0D1B2E)],
               ),
               borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black45,
-                  blurRadius: 16,
-                  offset: Offset(0, -6),
-                ),
-              ],
             ),
             child: SafeArea(
               child: Column(
@@ -178,11 +175,18 @@ class _FantasySelectState extends State<FantasySelect> {
                           ? () {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                  content: Text('Team Created Successfully!'),
+                                  content: Text(
+                                      'Team created! Redirecting to your teams...'),
                                   backgroundColor: Colors.green,
                                 ),
                               );
-                              // TODO: Save team & navigate to contest/join
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const MyCreatedTeamsPage(),
+                                ),
+                              );
                             }
                           : null,
                       icon: const Icon(Icons.check_circle_outline, size: 22),
@@ -213,21 +217,17 @@ class _FantasySelectState extends State<FantasySelect> {
     );
   }
 
-  Widget _buildTeamColumn({
-    required List<Map<String, dynamic>> team,
-    required String teamName,
-    required int teamIndex,
-  }) {
+  Widget _buildTeamColumn(
+      List<Map<String, dynamic>> team, String teamName, int teamIndex) {
     final selectedInTeam = team.where((p) => p['selected']).length;
 
     return Column(
       children: [
-        // Team Header with yellow accent
         Container(
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 16),
-          decoration: BoxDecoration(
-            color: const Color(0xFF1A2A44),
+          decoration: const BoxDecoration(
+            color: Color(0xFF1A2A44),
             border: Border(
                 bottom: BorderSide(color: const Color(0xFFFDB515), width: 3)),
           ),
@@ -264,8 +264,6 @@ class _FantasySelectState extends State<FantasySelect> {
             ),
           ),
         ),
-
-        // Player List
         Expanded(
           child: ListView.builder(
             padding: const EdgeInsets.all(12),
@@ -328,7 +326,6 @@ class _FantasySelectState extends State<FantasySelect> {
         ),
         child: Row(
           children: [
-            // Role Badge
             Container(
               width: 42,
               height: 42,
@@ -348,8 +345,6 @@ class _FantasySelectState extends State<FantasySelect> {
               ),
             ),
             const SizedBox(width: 14),
-
-            // Player Name
             Expanded(
               child: Text(
                 player['name'],
@@ -360,13 +355,171 @@ class _FantasySelectState extends State<FantasySelect> {
                 ),
               ),
             ),
-
-            // Selection Indicator
             if (isSelected)
               const Icon(Icons.check_circle,
                   color: Color(0xFFFDB515), size: 26),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class MyCreatedTeamsPage extends StatelessWidget {
+  const MyCreatedTeamsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Dummy data - your own created teams (replace with real data later)
+    final List<Map<String, dynamic>> myTeams = [
+      {
+        'name': 'Aakash XI',
+        'captain': 'Virat Kohli',
+        'viceCaptain': 'Rohit Sharma',
+        'players': 11,
+      },
+      {
+        'name': 'Nepal Power',
+        'captain': 'Rohit Paudel',
+        'viceCaptain': 'Kushal Malla',
+        'players': 11,
+      },
+      {
+        'name': 'All-rounders Only',
+        'captain': 'Hardik Pandya',
+        'viceCaptain': 'Dipendra Singh Airee',
+        'players': 11,
+      },
+    ];
+
+    return Scaffold(
+      backgroundColor: const Color(0xFF003262),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF003262),
+        elevation: 0,
+        title: const Text(
+          'My Teams',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+      body: Column(
+        children: [
+          // Match Info Header (same match info as in FantasySelect)
+
+          Expanded(
+            child: myTeams.isEmpty
+                ? const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(Icons.sports_cricket,
+                            size: 80, color: Colors.white54),
+                        SizedBox(height: 16),
+                        Text(
+                          'No teams created yet',
+                          style: TextStyle(color: Colors.white70, fontSize: 20),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          'Go back and create your first team!',
+                          style: TextStyle(color: Colors.white54, fontSize: 16),
+                        ),
+                      ],
+                    ),
+                  )
+                : ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: myTeams.length,
+                    itemBuilder: (context, index) {
+                      final team = myTeams[index];
+                      return Card(
+                        color: const Color(0xFF1A2A44),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16)),
+                        margin: const EdgeInsets.only(bottom: 12),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    team['name'],
+                                    style: const TextStyle(
+                                      color: Color(0xFFFDB515),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Captain: ${team['captain']} • VC: ${team['viceCaptain']}',
+                                style: const TextStyle(
+                                    color: Colors.white70, fontSize: 14),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Players: ${team['players']}/11',
+                                style: const TextStyle(
+                                    color: Colors.white, fontSize: 14),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '12/10/2025, 2:00 PM • Kirtipur',
+                                    style: TextStyle(
+                                        color: Color(0xFFFDB515), fontSize: 14),
+                                  ),
+                                  Text(
+                                    ' • ICC T20 World Cup',
+                                    style: TextStyle(color: Color(0xFFFDB515)),
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                'Nepal vs India',
+                                style: TextStyle(color: Color(0xFFFDB515)),
+                              ),
+                              const SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  OutlinedButton(
+                                    onPressed: () {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                            content: Text('Editing team...')),
+                                      );
+                                    },
+                                    style: OutlinedButton.styleFrom(
+                                      side: const BorderSide(
+                                          color: Color(0xFFFDB515)),
+                                      foregroundColor: const Color(0xFFFDB515),
+                                    ),
+                                    child: const Text('Edit'),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ],
       ),
     );
   }
