@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:beyondfantasy/api.dart'; // Your ApiConstants file
+import 'package:beyondfantasy/api.dart';
 import 'package:beyondfantasy/loginpage.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -124,7 +124,6 @@ class _ProfilePageState extends State<ProfilePage> {
         );
       }
 
-      // Clear token locally
       await prefs.remove('auth_token');
 
       ScaffoldMessenger.of(context).showSnackBar(
