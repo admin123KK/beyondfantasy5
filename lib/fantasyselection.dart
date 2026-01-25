@@ -8,7 +8,6 @@ class FantasySelect extends StatefulWidget {
 }
 
 class _FantasySelectState extends State<FantasySelect> {
-  // Sample player data for both teams
   final List<Map<String, dynamic>> teamA = [
     {'name': 'Rohit Sharma', 'role': 'BAT', 'selected': false},
     {'name': 'Virat Kohli', 'role': 'BAT', 'selected': false},
@@ -54,7 +53,6 @@ class _FantasySelectState extends State<FantasySelect> {
       final team = teamIndex == 0 ? teamA : teamB;
       final player = team[playerIndex];
 
-      // Prevent selecting more than 7 from one team
       final teamSelected = team.where((p) => p['selected']).length;
       if (!player['selected'] && teamSelected >= 7) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -86,11 +84,9 @@ class _FantasySelectState extends State<FantasySelect> {
       ),
       body: Column(
         children: [
-          // Team selection area
           Expanded(
             child: Row(
               children: [
-                // Team A (Left)
                 Expanded(
                   child: Column(
                     children: [
@@ -121,14 +117,10 @@ class _FantasySelectState extends State<FantasySelect> {
                     ],
                   ),
                 ),
-
-                // Divider
                 Container(
                   width: 1,
                   color: Colors.white.withOpacity(0.2),
                 ),
-
-                // Team B (Right)
                 Expanded(
                   child: Column(
                     children: [
@@ -162,11 +154,9 @@ class _FantasySelectState extends State<FantasySelect> {
               ],
             ),
           ),
-
-          // Bottom bar: Selected count + Create button
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: const Color(0xFF1A2A44),
               borderRadius:
                   const BorderRadius.vertical(top: Radius.circular(20)),
@@ -188,7 +178,7 @@ class _FantasySelectState extends State<FantasySelect> {
                     ),
                     Text(
                       'Bench: ${selectedCount > 11 ? selectedCount - 11 : 0} / 4',
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white70,
                         fontSize: 14,
                       ),

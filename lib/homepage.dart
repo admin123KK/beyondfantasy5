@@ -1,3 +1,4 @@
+import 'package:beyondfantasy/proiflepage.dart';
 import 'package:beyondfantasy/rankingpage.dart';
 import 'package:beyondfantasy/schedulepage.dart';
 import 'package:flutter/material.dart';
@@ -399,8 +400,14 @@ class HomePage extends StatelessWidget {
                   },
                   child: Icon(Icons.stacked_bar_chart_outlined, size: 28)),
               label: 'Calendar'),
-          const BottomNavigationBarItem(
-              icon: Icon(Icons.person, size: 28), label: 'Profile'),
+          BottomNavigationBarItem(
+              icon: InkWell(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => ProfilePage()));
+                  },
+                  child: Icon(Icons.person, size: 28)),
+              label: 'Profile'),
         ],
       ),
     );
