@@ -89,9 +89,8 @@ class HomePage extends StatelessWidget {
                                         children: [
                                           CircleAvatar(
                                             radius: 32,
-                                            backgroundImage: const NetworkImage(
-                                              'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Flag_of_Nepal.svg/1200px-Flag_of_Nepal.svg.png',
-                                            ),
+                                            backgroundImage: AssetImage(
+                                                'assets/images/nepal.png'),
                                             backgroundColor: Colors.white,
                                           ),
                                           const SizedBox(width: 12),
@@ -136,12 +135,9 @@ class HomePage extends StatelessWidget {
                                                   ),
                                                   const SizedBox(width: 12),
                                                   CircleAvatar(
-                                                    radius: 32,
-                                                    backgroundImage:
-                                                        const NetworkImage(
-                                                      'https://upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/1200px-Flag_of_England.svg.png',
-                                                    ),
-                                                  ),
+                                                      radius: 32,
+                                                      backgroundImage: AssetImage(
+                                                          'assets/images/england.png')),
                                                 ],
                                               ),
                                             ],
@@ -286,22 +282,18 @@ class HomePage extends StatelessWidget {
                             children: [
                               _buildUpcomingMatchCard(
                                 league: 'T20 World Cup',
-                                team1Flag:
-                                    'https://static.vecteezy.com/system/resources/previews/046/158/186/original/national-flag-of-new-zealand-new-zealand-flag-waving-new-zealand-flag-free-vector.jpg',
+                                team1Flag: 'assets/images/newzealand.png',
                                 team1: 'NEWZEALAND',
-                                team2Flag:
-                                    'https://static.vecteezy.com/system/resources/thumbnails/004/756/937/small_2x/sri-lanka-flag-free-vector.jpg',
+                                team2Flag: 'assets/images/srilanka.png',
                                 team2: 'SRILANKA',
                                 time: '10h 10min',
                               ),
                               const SizedBox(width: 16),
                               _buildUpcomingMatchCard(
                                 league: 'T20 World Cup',
-                                team1Flag:
-                                    'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Flag_of_Nepal.svg/1200px-Flag_of_Nepal.svg.png',
+                                team1Flag: 'assets/images/nepal.png',
                                 team1: 'NEPAL',
-                                team2Flag:
-                                    'https://static.vecteezy.com/system/resources/thumbnails/004/756/937/small_2x/sri-lanka-flag-free-vector.jpg',
+                                team2Flag: 'assets/images/srilanka.png',
                                 team2: 'SRILANKA',
                                 time: 'Upcoming',
                               ),
