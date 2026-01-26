@@ -66,7 +66,6 @@ class HomePage extends StatelessWidget {
                         ),
                         const SizedBox(height: 12),
 
-                        // Live Match Card
                         Container(
                           padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
                           decoration: BoxDecoration(
@@ -115,7 +114,6 @@ class HomePage extends StatelessWidget {
                                         ),
                                       ),
 
-                                      // England side with LIVE badge above avatar
                                       Stack(
                                         alignment: Alignment.topCenter,
                                         clipBehavior: Clip.none,

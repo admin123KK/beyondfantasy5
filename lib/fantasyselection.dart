@@ -87,13 +87,12 @@ class _FantasySelectState extends State<FantasySelect> {
       ),
       body: Column(
         children: [
-          // Match Info Header (new - shows on top of team selection)
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(16),
             color: const Color(0xFF1A2A44),
-            child: Column(
-              children: const [
+            child: const Column(
+              children: [
                 Text(
                   'Nepal vs India',
                   style: TextStyle(
@@ -110,7 +109,6 @@ class _FantasySelectState extends State<FantasySelect> {
               ],
             ),
           ),
-
           Expanded(
             child: Row(
               children: [
@@ -122,8 +120,6 @@ class _FantasySelectState extends State<FantasySelect> {
               ],
             ),
           ),
-
-          // Bottom fixed bar
           Container(
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
             decoration: const BoxDecoration(
@@ -472,7 +468,7 @@ class MyCreatedTeamsPage extends StatelessWidget {
                                 style: const TextStyle(
                                     color: Colors.white, fontSize: 14),
                               ),
-                              Row(
+                              const Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
@@ -487,7 +483,7 @@ class MyCreatedTeamsPage extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              Text(
+                              const Text(
                                 'Nepal vs India',
                                 style: TextStyle(color: Color(0xFFFDB515)),
                               ),

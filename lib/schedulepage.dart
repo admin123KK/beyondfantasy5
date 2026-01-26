@@ -6,7 +6,6 @@ class GameSchedulePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Sample matches
     final List<Map<String, String>> matches = [
       {
         'teamA': 'Karnali Yaks',
