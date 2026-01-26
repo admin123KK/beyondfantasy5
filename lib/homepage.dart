@@ -92,6 +92,7 @@ class HomePage extends StatelessWidget {
                                             backgroundImage: const NetworkImage(
                                               'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Flag_of_Nepal.svg/1200px-Flag_of_Nepal.svg.png',
                                             ),
+                                            backgroundColor: Colors.white,
                                           ),
                                           const SizedBox(width: 12),
                                           const Text(
@@ -286,10 +287,10 @@ class HomePage extends StatelessWidget {
                               _buildUpcomingMatchCard(
                                 league: 'T20 World Cup',
                                 team1Flag:
-                                    'https://upload.wikimedia.org/wikipedia/commons/3/3e/Flag_of_New_Zealand.svg',
+                                    'https://static.vecteezy.com/system/resources/previews/046/158/186/original/national-flag-of-new-zealand-new-zealand-flag-waving-new-zealand-flag-free-vector.jpg',
                                 team1: 'NEWZEALAND',
                                 team2Flag:
-                                    'https://upload.wikimedia.org/wikipedia/commons/1/11/Flag_of_Sri_Lanka.svg',
+                                    'https://static.vecteezy.com/system/resources/thumbnails/004/756/937/small_2x/sri-lanka-flag-free-vector.jpg',
                                 team2: 'SRILANKA',
                                 time: '10h 10min',
                               ),
@@ -300,7 +301,7 @@ class HomePage extends StatelessWidget {
                                     'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Flag_of_Nepal.svg/1200px-Flag_of_Nepal.svg.png',
                                 team1: 'NEPAL',
                                 team2Flag:
-                                    'https://upload.wikimedia.org/wikipedia/commons/1/11/Flag_of_Sri_Lanka.svg',
+                                    'https://static.vecteezy.com/system/resources/thumbnails/004/756/937/small_2x/sri-lanka-flag-free-vector.jpg',
                                 team2: 'SRILANKA',
                                 time: 'Upcoming',
                               ),
@@ -332,7 +333,7 @@ class HomePage extends StatelessWidget {
                         const SizedBox(height: 12),
                         Container(
                           height: 350,
-                          padding: const EdgeInsets.all(16),
+                          // padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(16),
@@ -345,17 +346,23 @@ class HomePage extends StatelessWidget {
                                     'https://media.cricnepal.com/assets/Nepal-men-team-acknowledge-fans.webp'),
                                 fit: BoxFit.fill,
                               ),
-                              Text(
-                                'Nepal eyes big win Over England on their first T20 World Cup',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: Text(
+                                  'Nepal eyes big win Over England on their first T20 World Cup',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
-                              Text(
-                                '10min ago',
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 12),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: Text(
+                                  '10min ago',
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 9),
+                                ),
                               ),
                             ],
                           ),
@@ -421,7 +428,6 @@ class HomePage extends StatelessWidget {
   }) {
     return Container(
       width: 220,
-      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -439,6 +445,7 @@ class HomePage extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 24,
+                backgroundColor: Colors.white,
                 backgroundImage: NetworkImage(team1Flag),
               ),
               const Text(
@@ -458,11 +465,14 @@ class HomePage extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            // mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text(
-                time,
-                style: const TextStyle(fontSize: 10, color: Colors.green),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: Text(
+                  time,
+                  style: const TextStyle(fontSize: 10, color: Colors.green),
+                ),
               ),
             ],
           ),

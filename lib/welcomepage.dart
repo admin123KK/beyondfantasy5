@@ -1,4 +1,4 @@
-import 'package:beyondfantasy/pageone.dart';
+import 'package:beyondfantasy/homepage.dart';
 import 'package:flutter/material.dart';
 
 class Welcomepage extends StatefulWidget {
@@ -47,7 +47,7 @@ class _WelcomepageState extends State<Welcomepage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const Pageone()),
+                    MaterialPageRoute(builder: (context) => const HomePage()),
                   );
                 },
                 child: Container(
