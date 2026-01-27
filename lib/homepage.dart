@@ -1,19 +1,42 @@
+import 'dart:convert';
+
+import 'package:beyondfantasy/api.dart';
 import 'package:beyondfantasy/proiflepage.dart';
 import 'package:beyondfantasy/rankingpage.dart';
 import 'package:beyondfantasy/schedulepage.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
-class HomePage extends StatelessWidget {
+// Assume this is in your api.dart or constants file
+
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF003262),
+
+      // Drawer with dynamic user info
+      drawer: const UserDrawer(),
+
       appBar: AppBar(
         backgroundColor: const Color(0xFF003262),
         elevation: 0,
-        leading: const Icon(Icons.menu, color: Colors.white, size: 28),
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu, color: Colors.white, size: 28),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+        ),
         title: const Text(
           'Beyond Fantasy',
           style: TextStyle(
@@ -35,6 +58,7 @@ class HomePage extends StatelessWidget {
           SizedBox(width: 8),
         ],
       ),
+
       body: Column(
         children: [
           Expanded(
@@ -93,8 +117,8 @@ class HomePage extends StatelessWidget {
                                                 'assets/images/nepal.png'),
                                             backgroundColor: Colors.white,
                                           ),
-                                          const SizedBox(width: 12),
-                                          const Text(
+                                          SizedBox(width: 12),
+                                          Text(
                                             'NEPAL',
                                             style: TextStyle(
                                               fontSize: 16,
@@ -120,12 +144,10 @@ class HomePage extends StatelessWidget {
                                         children: [
                                           const Column(
                                             children: [
-                                              const SizedBox(
-                                                  height:
-                                                      10), // space for badge above
+                                              SizedBox(height: 10),
                                               Row(
                                                 children: [
-                                                  const Text(
+                                                  Text(
                                                     'ENGLAND',
                                                     style: TextStyle(
                                                       fontSize: 16,
@@ -133,11 +155,12 @@ class HomePage extends StatelessWidget {
                                                           FontWeight.bold,
                                                     ),
                                                   ),
-                                                  const SizedBox(width: 12),
+                                                  SizedBox(width: 12),
                                                   CircleAvatar(
-                                                      radius: 32,
-                                                      backgroundImage: AssetImage(
-                                                          'assets/images/england.png')),
+                                                    radius: 32,
+                                                    backgroundImage: AssetImage(
+                                                        'assets/images/england.png'),
+                                                  ),
                                                 ],
                                               ),
                                             ],
@@ -148,9 +171,8 @@ class HomePage extends StatelessWidget {
                                             child: Container(
                                               padding:
                                                   const EdgeInsets.symmetric(
-                                                horizontal: 10,
-                                                vertical: 4,
-                                              ),
+                                                      horizontal: 10,
+                                                      vertical: 4),
                                               decoration: BoxDecoration(
                                                 color: Colors.red,
                                                 borderRadius:
@@ -193,9 +215,8 @@ class HomePage extends StatelessWidget {
                                       Text(
                                         '180/4',
                                         style: TextStyle(
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                       Text(
                                         '(20)',
@@ -209,9 +230,8 @@ class HomePage extends StatelessWidget {
                                       Text(
                                         '90/3',
                                         style: TextStyle(
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                       Text(
                                         '(12.3)',
@@ -231,10 +251,11 @@ class HomePage extends StatelessWidget {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 24, vertical: 8),
                                   decoration: const BoxDecoration(
-                                    color: const Color(0xFF003262),
+                                    color: Color(0xFF003262),
                                     borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(20),
-                                        topRight: Radius.circular(20)),
+                                      topLeft: Radius.circular(20),
+                                      topRight: Radius.circular(20),
+                                    ),
                                   ),
                                   child: const Text(
                                     'ICC Men\'s T20 World Cup',
@@ -259,9 +280,7 @@ class HomePage extends StatelessWidget {
                             const Text(
                               'Upcoming Matches',
                               style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
+                                  fontSize: 20, fontWeight: FontWeight.bold),
                             ),
                             TextButton(
                               onPressed: () {},
@@ -307,9 +326,7 @@ class HomePage extends StatelessWidget {
                             const Text(
                               'Trending News',
                               style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
+                                  fontSize: 20, fontWeight: FontWeight.bold),
                             ),
                             TextButton(
                               onPressed: () {},
@@ -323,14 +340,13 @@ class HomePage extends StatelessWidget {
                         const SizedBox(height: 9),
                         Container(
                           height: 320,
-                          // padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: const Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
+                            children: [
                               Image(
                                 image: NetworkImage(
                                     'https://media.cricnepal.com/assets/Nepal-men-team-acknowledge-fans.webp'),
@@ -341,9 +357,8 @@ class HomePage extends StatelessWidget {
                                 child: Text(
                                   'Nepal eyes big win Over England on their first T20 World Cup',
                                   style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600),
                                 ),
                               ),
                               Padding(
@@ -366,6 +381,7 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
+
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: const Color(0xFFFDB515),
         selectedItemColor: Colors.black87,
@@ -378,31 +394,37 @@ class HomePage extends StatelessWidget {
           const BottomNavigationBarItem(
               icon: Icon(Icons.home, size: 28), label: 'Home'),
           BottomNavigationBarItem(
-              icon: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => GameSchedulePage()));
-                  },
-                  child: const Icon(Icons.sports_cricket, size: 28)),
-              label: 'Matches'),
+            icon: InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => GameSchedulePage()));
+              },
+              child: const Icon(Icons.sports_cricket, size: 28),
+            ),
+            label: 'Matches',
+          ),
           BottomNavigationBarItem(
-              icon: InkWell(
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => RankingPage()));
-                  },
-                  child: Icon(Icons.stacked_bar_chart_outlined, size: 28)),
-              label: 'Calendar'),
+            icon: InkWell(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => RankingPage()));
+              },
+              child: const Icon(Icons.stacked_bar_chart_outlined, size: 28),
+            ),
+            label: 'Calendar',
+          ),
           BottomNavigationBarItem(
-              icon: InkWell(
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => ProfilePage()));
-                  },
-                  child: Icon(Icons.person, size: 28)),
-              label: 'Profile'),
+            icon: InkWell(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ProfilePage()));
+              },
+              child: const Icon(Icons.person, size: 28),
+            ),
+            label: 'Profile',
+          ),
         ],
       ),
     );
@@ -455,7 +477,6 @@ class HomePage extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Row(
-            // mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -465,6 +486,176 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ========================================
+// Drawer as separate widget with backend fetch
+// ========================================
+
+class UserDrawer extends StatefulWidget {
+  const UserDrawer({super.key});
+
+  @override
+  State<UserDrawer> createState() => _UserDrawerState();
+}
+
+class _UserDrawerState extends State<UserDrawer> {
+  String _name = 'Loading...';
+  String _email = 'Loading...';
+  bool _isLoading = true;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserProfile();
+  }
+
+  Future<void> _fetchUserProfile() async {
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('auth_token');
+
+      if (token == null || token.isEmpty) {
+        throw Exception('No token found');
+      }
+
+      final response = await http.get(
+        Uri.parse(ApiConstants.profileEndPoint),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final user =
+            data['user'] ?? data; // adjust based on your response structure
+
+        setState(() {
+          _name = user['name'] ?? 'User';
+          _email = user['email'] ?? 'No email';
+          _isLoading = false;
+        });
+      } else {
+        throw Exception('Failed to load profile: ${response.statusCode}');
+      }
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      backgroundColor: Colors.white,
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          DrawerHeader(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage(
+                    'assets/images/beyondfantasy.png',
+                  ),
+                  fit: BoxFit.cover),
+              gradient: LinearGradient(
+                colors: [Color(0xFFFDB515), Color(0xFFFFC107)],
+              ),
+            ),
+            child: _isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(color: Colors.black87))
+                : _error != null
+                    ? Center(
+                        child: Text(
+                          'Error: $_error',
+                          style: const TextStyle(color: Colors.redAccent),
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SizedBox(height: 90),
+                          Text(
+                            'ID_$_name',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            _email,
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 10),
+                          ),
+                        ],
+                      ),
+          ),
+
+          // Navigation items
+          ListTile(
+            leading: const Icon(Icons.home, color: Colors.black),
+            title: const Text('Home', style: TextStyle(color: Colors.black)),
+            onTap: () => Navigator.pop(context),
+          ),
+          ListTile(
+            leading: const Icon(Icons.sports_cricket, color: Colors.black),
+            title: const Text('Matches', style: TextStyle(color: Colors.black)),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => GameSchedulePage()));
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.stacked_bar_chart_outlined,
+                color: Colors.black),
+            title:
+                const Text('Rankings', style: TextStyle(color: Colors.black)),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (_) => RankingPage()));
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.person, color: Colors.black),
+            title: const Text('Profile', style: TextStyle(color: Colors.black)),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (_) => ProfilePage()));
+            },
+          ),
+          const Divider(color: Colors.grey),
+          ListTile(
+            leading: const Icon(Icons.logout, color: Colors.redAccent),
+            title: const Text('Logout', style: TextStyle(color: Colors.red)),
+            onTap: () {
+              Navigator.pop(context);
+              // TODO: real logout (clear token, go to login)
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Logged out successfully')),
+              );
+            },
           ),
         ],
       ),
