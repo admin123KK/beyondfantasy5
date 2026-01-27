@@ -142,8 +142,6 @@ class HomePage extends StatelessWidget {
                                               ),
                                             ],
                                           ),
-
-                                          // LIVE badge positioned above England avatar
                                           Positioned(
                                             top: -20,
                                             right: 0,
@@ -252,7 +250,7 @@ class HomePage extends StatelessWidget {
                           ),
                         ),
 
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 10),
 
                         // Upcoming Matches
                         Row(
@@ -274,7 +272,7 @@ class HomePage extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 10),
                         SizedBox(
                           height: 140,
                           child: ListView(
@@ -301,7 +299,7 @@ class HomePage extends StatelessWidget {
                           ),
                         ),
 
-                        const SizedBox(height: 32),
+                        const SizedBox(height: 10),
 
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -322,9 +320,9 @@ class HomePage extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 9),
                         Container(
-                          height: 350,
+                          height: 320,
                           // padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -438,7 +436,7 @@ class HomePage extends StatelessWidget {
               CircleAvatar(
                 radius: 24,
                 backgroundColor: Colors.white,
-                backgroundImage: NetworkImage(team1Flag),
+                backgroundImage: AssetImage(team1Flag),
               ),
               const Text(
                 'vs',
@@ -446,7 +444,7 @@ class HomePage extends StatelessWidget {
               ),
               CircleAvatar(
                 radius: 24,
-                backgroundImage: NetworkImage(team2Flag),
+                backgroundImage: AssetImage(team2Flag),
               ),
             ],
           ),
