@@ -637,7 +637,7 @@ class _UserDrawerState extends State<UserDrawer> {
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
                   image: AssetImage(
                     'assets/images/beyondfantasy.png',

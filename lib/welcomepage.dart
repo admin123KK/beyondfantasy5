@@ -12,12 +12,14 @@ class _WelcomepageState extends State<Welcomepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF003262),
+      backgroundColor: const Color(0xFF0F034E),
       body: SafeArea(
         child: Column(
           children: [
+            Spacer(),
+            // Top text section
             const Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 60),
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 60),
               child: Column(
                 children: [
                   const Text(
@@ -40,7 +42,25 @@ class _WelcomepageState extends State<Welcomepage> {
                 ],
               ),
             ),
-            const Spacer(),
+
+            Center(
+              child: Container(
+                width: double.infinity,
+                height: 250,
+                decoration: BoxDecoration(
+                  color: Color(0xFF0F034E),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Image.asset(
+                  'assets/images/welcome.png',
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            Spacer(),
+            const SizedBox(height: 40),
+
+            // Get Started button
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
               child: InkWell(

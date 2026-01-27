@@ -8,7 +8,7 @@ class Pageone extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF003262),
+      backgroundColor: const Color(0xFF0F034E),
       body: SafeArea(
         child: Column(
           children: [
@@ -23,7 +23,7 @@ class Pageone extends StatelessWidget {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Color(0xFFFDB515),
-                        fontSize: 40,
+                        fontSize: 35,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -32,7 +32,7 @@ class Pageone extends StatelessWidget {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
-                        fontSize: 40,
+                        fontSize: 35,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -40,8 +40,14 @@ class Pageone extends StatelessWidget {
                 ),
               ),
             ),
-
+            Image.asset(
+              'assets/images/bhurtal.png',
+              fit: BoxFit.contain,
+            ),
             // Bottom bar: progress dots + Skip
+            const SizedBox(
+              height: 40,
+            ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 40),
               child: Row(
@@ -106,12 +112,12 @@ class Pagetwo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF003262),
+      backgroundColor: const Color(0xFF0F034E),
       body: SafeArea(
         child: Column(
           children: [
             // Main content - centered vertically
-            Expanded(
+            const Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
@@ -207,7 +213,7 @@ class Pagethree extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF003262),
+      backgroundColor: const Color(0xFF0F034E),
       body: SafeArea(
         child: Column(
           children: [

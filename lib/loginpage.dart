@@ -47,9 +47,9 @@ class _LoginPageState extends State<LoginPage> {
         content: Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             CircularProgressIndicator(
-              color: Color(0xFF003262),
+              color: Color(0xFF100355),
               strokeWidth: 5,
             ),
             SizedBox(width: 20),
@@ -68,9 +68,7 @@ class _LoginPageState extends State<LoginPage> {
     try {
       final response = await http.post(
         Uri.parse(ApiConstants.loginEndPoint),
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "email": email,
           "password": password,
@@ -90,7 +88,6 @@ class _LoginPageState extends State<LoginPage> {
             data['bearer_token'];
 
         if (token != null && token.toString().isNotEmpty) {
-          // Save bearer token
           final prefs = await SharedPreferences.getInstance();
           await prefs.setString('auth_token', token.toString());
 
@@ -101,7 +98,6 @@ class _LoginPageState extends State<LoginPage> {
             ),
           );
 
-          // Wait 2 seconds then go to home
           await Future.delayed(const Duration(seconds: 2));
 
           if (mounted) {
@@ -145,15 +141,43 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF003262),
+      backgroundColor: const Color(0xFF0F034E),
       body: SafeArea(
         child: Stack(
           children: [
+            Container(
+              color: const Color(0xFF0F034E),
+            ),
+            Positioned(
+              top: 190,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Container(
+                  width: double.infinity,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Image.asset(
+                    'assets/images/beyondfantasy.png',
+                    fit: BoxFit.cover,
+                  ),
+                  // You can replace Icon with:
+                  // child: Image.asset('assets/images/logo.png', fit: BoxFit.contain),
+                  // or child: Image.network('your-logo-url-here'),
+                ),
+              ),
+            ),
+
+            // Main login form (white rounded bottom card)
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
                 width: double.infinity,
-                padding: const EdgeInsets.fromLTRB(24, 32, 24, 40),
+                padding: const EdgeInsets.fromLTRB(
+                    24, 80, 24, 40), // extra top padding for logo space
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(

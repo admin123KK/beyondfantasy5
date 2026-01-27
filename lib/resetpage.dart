@@ -167,7 +167,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF003262),
+      backgroundColor: const Color(0xFF0F034E),
       body: SafeArea(
         child: Stack(
           children: [
