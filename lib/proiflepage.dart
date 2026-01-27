@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:beyondfantasy/api.dart';
 import 'package:beyondfantasy/loginpage.dart';
 import 'package:flutter/material.dart';
@@ -250,27 +251,27 @@ class _ProfilePageState extends State<ProfilePage> {
                       const SizedBox(height: 40),
 
                       // Logout Button
-                      SizedBox(
-                        width: double.infinity,
-                        height: 60,
-                        child: ElevatedButton.icon(
-                          onPressed: _confirmLogout,
-                          icon: const Icon(Icons.logout, color: Colors.black87),
-                          label: const Text(
-                            'Logout',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFFDB515),
-                            foregroundColor: Colors.black87,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30)),
-                            elevation: 4,
-                          ),
-                        ),
-                      ),
+                      //   SizedBox(
+                      //     width: double.infinity,
+                      //     height: 60,
+                      //     child: ElevatedButton.icon(
+                      //       onPressed: _confirmLogout,
+                      //       icon: const Icon(Icons.logout, color: Colors.black87),
+                      //       label: const Text(
+                      //         'Logout',
+                      //         style: TextStyle(
+                      //             fontSize: 18, fontWeight: FontWeight.bold),
+                      //       ),
+                      //       style: ElevatedButton.styleFrom(
+                      //         backgroundColor: const Color(0xFFFDB515),
+                      //         foregroundColor: Colors.black87,
+                      //         padding: const EdgeInsets.symmetric(vertical: 16),
+                      //         shape: RoundedRectangleBorder(
+                      //             borderRadius: BorderRadius.circular(30)),
+                      //         elevation: 4,
+                      //       ),
+                      //     ),
+                      //   ),
                     ],
                   ),
                 ),

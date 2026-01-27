@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:beyondfantasy/api.dart';
+import 'package:beyondfantasy/loginpage.dart';
 import 'package:beyondfantasy/proiflepage.dart';
 import 'package:beyondfantasy/rankingpage.dart';
 import 'package:beyondfantasy/schedulepage.dart';
@@ -514,6 +515,75 @@ class _UserDrawerState extends State<UserDrawer> {
   void initState() {
     super.initState();
     _fetchUserProfile();
+    _confirmLogout();
+  }
+
+  Future<void> _confirmLogout() async {
+    final bool? confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.white,
+        title: const Text(
+          'Logout',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: const Text('Are you sure you want to logout?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false), // Cancel
+            child: const Text('No', style: TextStyle(color: Colors.grey)),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true), // Confirm
+            child: const Text('Yes', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      ),
+    );
+
+    if (confirmed == true && mounted) {
+      _performLogout();
+    }
+  }
+
+  Future<void> _performLogout() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('auth_token');
+
+      if (token != null && token.isNotEmpty) {
+        // Optional: Call logout endpoint (if your backend invalidates token)
+        await http.post(
+          Uri.parse(ApiConstants.logoutEndPoint), // ← your logout endpoint
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+        );
+      }
+
+      await prefs.remove('auth_token');
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Logged out successfully'),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const LoginPage()),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Logout failed: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   Future<void> _fetchUserProfile() async {
@@ -650,11 +720,7 @@ class _UserDrawerState extends State<UserDrawer> {
             leading: const Icon(Icons.logout, color: Colors.redAccent),
             title: const Text('Logout', style: TextStyle(color: Colors.red)),
             onTap: () {
-              Navigator.pop(context);
-              // TODO: real logout (clear token, go to login)
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Logged out successfully')),
-              );
+              _confirmLogout();
             },
           ),
         ],
