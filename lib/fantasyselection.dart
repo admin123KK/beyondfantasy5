@@ -72,9 +72,9 @@ class _FantasySelectState extends State<FantasySelect> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF003262),
+      backgroundColor: const Color(0xFF0F034E),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF003262),
+        backgroundColor: const Color(0xFF0F034E),
         elevation: 0,
         title: const Text(
           'Create Fantasy Team',
@@ -90,7 +90,7 @@ class _FantasySelectState extends State<FantasySelect> {
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(16),
-            color: const Color(0xFF1A2A44),
+            color: const Color(0xFF0F034E),
             child: const Column(
               children: [
                 Text(
@@ -126,7 +126,7 @@ class _FantasySelectState extends State<FantasySelect> {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Color(0xFF1A2A44), Color(0xFF0D1B2E)],
+                colors: [Color(0xFF0F034E), Color(0xFF0F034E)],
               ),
               borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
             ),
@@ -223,7 +223,7 @@ class _FantasySelectState extends State<FantasySelect> {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 16),
           decoration: const BoxDecoration(
-            color: Color(0xFF1A2A44),
+            color: Color(0xFF0F034E),
             border: Border(
                 bottom: BorderSide(color: const Color(0xFFFDB515), width: 3)),
           ),
@@ -304,7 +304,7 @@ class _FantasySelectState extends State<FantasySelect> {
         decoration: BoxDecoration(
           color: isSelected
               ? roleColor.withOpacity(0.18)
-              : const Color(0xFF1A2A44),
+              : const Color.fromARGB(216, 16, 1, 93),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isSelected ? const Color(0xFFFDB515) : Colors.transparent,
@@ -389,9 +389,9 @@ class MyCreatedTeamsPage extends StatelessWidget {
     ];
 
     return Scaffold(
-      backgroundColor: const Color(0xFF003262),
+      backgroundColor: const Color(0xFF0F034E),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF003262),
+        backgroundColor: const Color(0xFF0F034E),
         elevation: 0,
         title: const Text(
           'My Teams',
@@ -433,7 +433,8 @@ class MyCreatedTeamsPage extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final team = myTeams[index];
                       return Card(
-                        color: const Color(0xFF1A2A44),
+                        elevation: 20,
+                        color: const Color(0xFF0F034E),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16)),
                         margin: const EdgeInsets.only(bottom: 12),

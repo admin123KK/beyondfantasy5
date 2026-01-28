@@ -45,9 +45,9 @@ class GameSchedulePage extends StatelessWidget {
     ];
 
     return Scaffold(
-      backgroundColor: const Color(0xFF003262),
+      backgroundColor: const Color(0xFF0F034E),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF003262),
+        backgroundColor: const Color(0xFF0F034E),
         elevation: 0,
         title: const Text(
           'Match Schedule',

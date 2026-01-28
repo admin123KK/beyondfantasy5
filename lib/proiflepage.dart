@@ -150,9 +150,9 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF003262),
+      backgroundColor: const Color(0xFF0F034E),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF003262),
+        backgroundColor: const Color(0xFF0F034E),
         elevation: 0,
         title: const Text(
           'Profile',
@@ -215,7 +215,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         width: double.infinity,
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF1A2A44),
+                          color: const Color(0xFF0F034E),
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
