@@ -12,27 +12,32 @@ class Pageone extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            const Expanded(
+            Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Text(
-                      'PICK YOUR PLAYER',
+                  children: [
+                    Image.asset(
+                      'assets/images/pageone.png',
+                      fit: BoxFit.contain,
+                    ),
+                    const SizedBox(height: 5),
+                    const Text(
+                      '"PICK YOUR PLAYER',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Color(0xFFFDB515),
-                        fontSize: 35,
+                        fontSize: 30,
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    Text(
-                      'AND LEAD THE WORLD',
+                    const Text(
+                      'AND LEAD THE WORLD"',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
-                        fontSize: 35,
+                        fontSize: 30,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -40,10 +45,7 @@ class Pageone extends StatelessWidget {
                 ),
               ),
             ),
-            Image.asset(
-              'assets/images/pageone.png',
-              fit: BoxFit.contain,
-            ),
+
             // Bottom bar: progress dots + Skip
             const SizedBox(
               height: 40,
@@ -146,7 +148,7 @@ class Pagetwo extends StatelessWidget {
               ),
             ),
             Image.asset(
-              'assets/images/pageone.png',
+              'assets/images/southafrica.png',
               fit: BoxFit.contain,
             ),
             const Text(
@@ -242,14 +244,18 @@ class Pagethree extends StatelessWidget {
         child: Column(
           children: [
             // Main content - centered
-            const Expanded(
+            Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Text(
-                      'JOIN THE FANTASY',
+                  children: [
+                    Image.asset(
+                      'assets/images/indiacricket.png',
+                      fit: BoxFit.contain,
+                    ),
+                    const Text(
+                      '"JOIN THE FANTASY',
                       style: TextStyle(
                         color: Color(0xFFFDB515),
                         fontSize: 30,
@@ -257,11 +263,11 @@ class Pagethree extends StatelessWidget {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    Text(
-                      'CHALLANGE THE WORLD',
+                    const Text(
+                      'CHALLANGE THE WORLD"',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 38,
+                        fontSize: 30,
                         fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.center,
@@ -270,10 +276,7 @@ class Pagethree extends StatelessWidget {
                 ),
               ),
             ),
-            Image.asset(
-              'assets/images/ausmisson.png',
-              fit: BoxFit.contain,
-            ),
+
             SizedBox(
               height: 20,
             ),
