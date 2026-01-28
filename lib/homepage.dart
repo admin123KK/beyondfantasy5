@@ -24,13 +24,13 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF003262),
+      backgroundColor: const Color(0xFF0F034E),
 
       // Drawer with dynamic user info
       drawer: const UserDrawer(),
 
       appBar: AppBar(
-        backgroundColor: const Color(0xFF003262),
+        backgroundColor: const Color(0xFF0F034E),
         elevation: 0,
         leading: Builder(
           builder: (context) => IconButton(
@@ -252,7 +252,7 @@ class _HomePageState extends State<HomePage> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 24, vertical: 8),
                                   decoration: const BoxDecoration(
-                                    color: Color(0xFF003262),
+                                    color: Color(0xFF0F034E),
                                     borderRadius: BorderRadius.only(
                                       topLeft: Radius.circular(20),
                                       topRight: Radius.circular(20),
@@ -632,7 +632,7 @@ class _UserDrawerState extends State<UserDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xFF0F034E),
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
@@ -644,7 +644,7 @@ class _UserDrawerState extends State<UserDrawer> {
                   ),
                   fit: BoxFit.cover),
               gradient: LinearGradient(
-                colors: [Color(0xFFFDB515), Color(0xFFFFC107)],
+                colors: [Color(0xFF0F034E), Color(0xFF0F034E)],
               ),
             ),
             child: _isLoading
@@ -682,13 +682,13 @@ class _UserDrawerState extends State<UserDrawer> {
 
           // Navigation items
           ListTile(
-            leading: const Icon(Icons.home, color: Colors.black),
-            title: const Text('Home', style: TextStyle(color: Colors.black)),
+            leading: const Icon(Icons.home, color: Colors.white),
+            title: const Text('Home', style: TextStyle(color: Colors.white)),
             onTap: () => Navigator.pop(context),
           ),
           ListTile(
-            leading: const Icon(Icons.sports_cricket, color: Colors.black),
-            title: const Text('Matches', style: TextStyle(color: Colors.black)),
+            leading: const Icon(Icons.sports_cricket, color: Colors.white),
+            title: const Text('Matches', style: TextStyle(color: Colors.white)),
             onTap: () {
               Navigator.pop(context);
               Navigator.push(context,
@@ -697,9 +697,9 @@ class _UserDrawerState extends State<UserDrawer> {
           ),
           ListTile(
             leading: const Icon(Icons.stacked_bar_chart_outlined,
-                color: Colors.black),
+                color: Colors.white),
             title:
-                const Text('Rankings', style: TextStyle(color: Colors.black)),
+                const Text('Rankings', style: TextStyle(color: Colors.white)),
             onTap: () {
               Navigator.pop(context);
               Navigator.push(
@@ -707,15 +707,15 @@ class _UserDrawerState extends State<UserDrawer> {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.person, color: Colors.black),
-            title: const Text('Profile', style: TextStyle(color: Colors.black)),
+            leading: const Icon(Icons.person, color: Colors.white),
+            title: const Text('Profile', style: TextStyle(color: Colors.white)),
             onTap: () {
               Navigator.pop(context);
               Navigator.push(
                   context, MaterialPageRoute(builder: (_) => ProfilePage()));
             },
           ),
-          const Divider(color: Colors.grey),
+          // const Divider(color: Color(0xFFFFC107)),
           ListTile(
             leading: const Icon(Icons.logout, color: Colors.redAccent),
             title: const Text('Logout', style: TextStyle(color: Colors.red)),

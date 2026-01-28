@@ -75,7 +75,7 @@ class _WelcomepageState extends State<Welcomepage> {
                   );
                 },
                 child: Container(
-                  height: 40,
+                  height: 45,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
