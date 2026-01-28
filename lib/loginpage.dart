@@ -161,7 +161,7 @@ class _LoginPageState extends State<LoginPage> {
                     shape: BoxShape.circle,
                   ),
                   child: Image.asset(
-                    'assets/images/beyondfantasy.png',
+                    'assets/images/beyondfantasyyy.png',
                     fit: BoxFit.cover,
                   ),
                   // You can replace Icon with:

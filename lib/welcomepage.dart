@@ -18,22 +18,40 @@ class _WelcomepageState extends State<Welcomepage> {
           children: [
             Spacer(),
             // Top text section
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 60),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 0, vertical: 60),
               child: Column(
                 children: [
                   const Text(
-                    'DREAM IT BUILD IT\n WIN BIG',
+                    '',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
-                      fontSize: 40,
+                      fontSize: 30,
                     ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 20),
+                  Center(
+                    child: Container(
+                      width: double.infinity,
+                      height: 210,
+                      decoration: BoxDecoration(
+                        color: Color(0xFF0F034E),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Image.asset(
+                        'assets/images/trophyimage.png',
+                        fit: BoxFit.cover,
+                        // fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   const Text(
-                    'Join the ultimate fantasy league experience and \ncompete for massive cash prizes every week.',
+                    '"Join the ultimate fantasy league experience and \ncompete for massive cash prizes every week."',
                     style: TextStyle(
                       color: Color(0xFFFDB515),
                     ),
@@ -43,20 +61,6 @@ class _WelcomepageState extends State<Welcomepage> {
               ),
             ),
 
-            Center(
-              child: Container(
-                width: double.infinity,
-                height: 250,
-                decoration: BoxDecoration(
-                  color: Color(0xFF0F034E),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Image.asset(
-                  'assets/images/welcome.png',
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
             Spacer(),
             const SizedBox(height: 40),
 

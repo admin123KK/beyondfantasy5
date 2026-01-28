@@ -41,7 +41,7 @@ class Pageone extends StatelessWidget {
               ),
             ),
             Image.asset(
-              'assets/images/bhurtal.png',
+              'assets/images/pageone.png',
               fit: BoxFit.contain,
             ),
             // Bottom bar: progress dots + Skip
@@ -121,32 +121,56 @@ class Pagetwo extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  // mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
-                    Text(
-                      'YOUR STRATEGY',
-                      style: TextStyle(
-                        color: Color(0xFFFDB515),
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    Text(
-                      'YOUR TEAM YOUR VICTORY',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
+                    // Text(
+                    //   'YOUR STRATEGY',
+                    //   style: TextStyle(
+                    //     color: Color(0xFFFDB515),
+                    //     fontSize: 37,
+                    //     fontWeight: FontWeight.bold,
+                    //   ),
+                    //   textAlign: TextAlign.center,
+                    // ),
+                    // Text(
+                    //   'YOUR TEAM YOUR VICTORY',
+                    //   style: TextStyle(
+                    //     color: Colors.white,
+                    //     fontSize: 37,
+                    //     fontWeight: FontWeight.bold,
+                    //   ),
+                    //   textAlign: TextAlign.center,
+                    // ),
                   ],
                 ),
               ),
             ),
+            Image.asset(
+              'assets/images/pageone.png',
+              fit: BoxFit.contain,
+            ),
+            const Text(
+              ' " YOUR STRATEGY ',
+              style: TextStyle(
+                color: Color(0xFFFDB515),
+                fontSize: 26,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const Text(
+              ' YOUR TEAM YOUR VICTORY "',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 26,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(
+              height: 300,
+            ),
 
-            // Bottom bar: progress + Skip
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 40),
               child: Row(
@@ -218,7 +242,7 @@ class Pagethree extends StatelessWidget {
         child: Column(
           children: [
             // Main content - centered
-            Expanded(
+            const Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
@@ -228,7 +252,7 @@ class Pagethree extends StatelessWidget {
                       'JOIN THE FANTASY',
                       style: TextStyle(
                         color: Color(0xFFFDB515),
-                        fontSize: 40,
+                        fontSize: 30,
                         fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.center,
@@ -237,7 +261,7 @@ class Pagethree extends StatelessWidget {
                       'CHALLANGE THE WORLD',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 40,
+                        fontSize: 38,
                         fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.center,
@@ -246,8 +270,13 @@ class Pagethree extends StatelessWidget {
                 ),
               ),
             ),
-
-            // Bottom bar: progress + Skip → goes to Login
+            Image.asset(
+              'assets/images/ausmisson.png',
+              fit: BoxFit.contain,
+            ),
+            SizedBox(
+              height: 20,
+            ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 40),
               child: Row(
