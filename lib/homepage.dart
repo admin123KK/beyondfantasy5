@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:beyondfantasy/api.dart';
+import 'package:beyondfantasy/fantasyteam.dart';
 import 'package:beyondfantasy/loginpage.dart';
 import 'package:beyondfantasy/pointtable.dart';
 import 'package:beyondfantasy/proiflepage.dart';
@@ -724,7 +725,9 @@ class _UserDrawerState extends State<UserDrawer> {
             onTap: () {
               Navigator.pop(context);
               Navigator.push(
-                  context, MaterialPageRoute(builder: (_) => RankingPage()));
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => const GlobalFantasyTeamsPage()));
             },
           ),
 
