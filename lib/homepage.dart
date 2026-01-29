@@ -11,8 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-// Assume this is in your api.dart or constants file
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -27,10 +25,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF0F034E),
-
-      // Drawer with dynamic user info
       drawer: const UserDrawer(),
-
       appBar: AppBar(
         backgroundColor: const Color(0xFF0F034E),
         elevation: 0,
@@ -61,7 +56,6 @@ class _HomePageState extends State<HomePage> {
           SizedBox(width: 8),
         ],
       ),
-
       body: Column(
         children: [
           Expanded(
@@ -131,7 +125,6 @@ class _HomePageState extends State<HomePage> {
                                         ],
                                       ),
 
-                                      // VS
                                       const Text(
                                         'VS',
                                         style: TextStyle(
@@ -205,10 +198,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ],
                               ),
-
                               const SizedBox(height: 24),
-
-                              // Scores
                               const Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
@@ -245,10 +235,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ],
                               ),
-
                               const SizedBox(height: 24),
-
-                              // ICC tag at bottom
                               Center(
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
@@ -273,10 +260,7 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                         ),
-
                         const SizedBox(height: 10),
-
-                        // Upcoming Matches
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -384,7 +368,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: const Color(0xFF0F034E),
         selectedItemColor: const Color(0xFFFDB515),
@@ -402,7 +385,7 @@ class _HomePageState extends State<HomePage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => GameSchedulePage()));
+                        builder: (context) => const GameSchedulePage()));
               },
               child: const Icon(Icons.sports_cricket, size: 28),
             ),
@@ -411,8 +394,10 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: InkWell(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => RankingPage()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const RankingPage()));
               },
               child: const Icon(Icons.stacked_bar_chart_outlined, size: 28),
             ),
@@ -495,10 +480,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-// ========================================
-// Drawer as separate widget with backend fetch
-// ========================================
 
 class UserDrawer extends StatefulWidget {
   const UserDrawer({super.key});

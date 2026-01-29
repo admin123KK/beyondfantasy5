@@ -49,7 +49,6 @@ class _RankingPageState extends State<RankingPage>
       ),
       body: Column(
         children: [
-          // Tab Bar with yellow indicator
           Container(
             color: const Color(0xFFFDB515), // dark card-like background
             child: TabBar(
@@ -66,8 +65,6 @@ class _RankingPageState extends State<RankingPage>
               ],
             ),
           ),
-
-          // Tab content
           Expanded(
             child: TabBarView(
               controller: _tabController,
@@ -100,7 +97,6 @@ class _RankingPageState extends State<RankingPage>
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        // Header row
         Container(
           padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
           decoration: BoxDecoration(
@@ -147,10 +143,7 @@ class _RankingPageState extends State<RankingPage>
             ],
           ),
         ),
-
         const SizedBox(height: 12),
-
-        // Ranking rows
         ...List.generate(rankings.length, (index) {
           final rank = rankings[index];
           final rankNumber = index + 1;
@@ -180,7 +173,6 @@ class _RankingPageState extends State<RankingPage>
               children: [
                 Row(
                   children: [
-                    // Name + rank icon
                     Expanded(
                       flex: 5,
                       child: Row(
@@ -209,7 +201,6 @@ class _RankingPageState extends State<RankingPage>
                       ),
                     ),
 
-                    // Rank number (yellow for top 3)
                     Expanded(
                       flex: 2,
                       child: Center(
