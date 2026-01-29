@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:beyondfantasy/api.dart';
 import 'package:beyondfantasy/loginpage.dart';
+import 'package:beyondfantasy/pointtable.dart';
 import 'package:beyondfantasy/proiflepage.dart';
 import 'package:beyondfantasy/rankingpage.dart';
 import 'package:beyondfantasy/schedulepage.dart';
@@ -696,16 +697,37 @@ class _UserDrawerState extends State<UserDrawer> {
             },
           ),
           ListTile(
+            leading: const Icon(Icons.list_alt, color: Colors.white),
+            title: const Text('Point Table',
+                style: TextStyle(color: Colors.white)),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (_) => PointTablePage()));
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.stacked_bar_chart_outlined,
                 color: Colors.white),
-            title:
-                const Text('Rankings', style: TextStyle(color: Colors.white)),
+            title: const Text('Fantasy Rankings',
+                style: TextStyle(color: Colors.white)),
             onTap: () {
               Navigator.pop(context);
               Navigator.push(
                   context, MaterialPageRoute(builder: (_) => RankingPage()));
             },
           ),
+          ListTile(
+            leading: const Icon(Icons.group_work_sharp, color: Colors.white),
+            title: const Text('Fantasy Teams',
+                style: TextStyle(color: Colors.white)),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (_) => RankingPage()));
+            },
+          ),
+
           ListTile(
             leading: const Icon(Icons.person, color: Colors.white),
             title: const Text('Profile', style: TextStyle(color: Colors.white)),

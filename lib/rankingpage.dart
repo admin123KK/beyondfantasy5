@@ -26,9 +26,9 @@ class _RankingPageState extends State<RankingPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF003262),
+      backgroundColor: const Color(0xFF0F034E),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF003262),
+        backgroundColor: const Color(0xFF0F034E),
         elevation: 0,
         title: const Text(
           'Rankings',
@@ -93,7 +93,7 @@ class _RankingPageState extends State<RankingPage>
         Container(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           decoration: BoxDecoration(
-            color: const Color(0xFF003262),
+            color: const Color(0xFF0F034E),
             borderRadius: BorderRadius.circular(12),
           ),
           child: const Row(
