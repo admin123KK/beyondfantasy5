@@ -5,7 +5,6 @@ class GlobalFantasyTeamsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Dummy data: fantasy teams created by other users (global competitors)
     final List<Map<String, dynamic>> globalTeams = [
       {
         'creator': 'Ramesh Thapa',
