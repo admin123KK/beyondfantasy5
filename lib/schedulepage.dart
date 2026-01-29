@@ -70,7 +70,7 @@ class GameSchedulePage extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: 16),
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFF1A2A44),
+              color: const Color(0xFF0F034E),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(color: Colors.white.withOpacity(0.08)),
               boxShadow: [
@@ -122,14 +122,14 @@ class GameSchedulePage extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
-                        color: Colors.redAccent,
+                        color: Colors.red,
                         borderRadius: BorderRadius.circular(24),
                       ),
                       child: const Text(
                         'VS',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 16,
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

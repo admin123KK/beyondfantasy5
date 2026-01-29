@@ -208,8 +208,8 @@ class _PointTablePageState extends State<PointTablePage>
                 children: [
                   // Header row (purple like your image)
                   TableRow(
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFDB515),
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFFDB515),
                     ),
                     children: [
                       _buildHeaderCell('Pos.'),

@@ -26,30 +26,39 @@ class _RankingPageState extends State<RankingPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0F034E),
+      backgroundColor: const Color(0xFF0F034E), // your main app dark blue
       appBar: AppBar(
         backgroundColor: const Color(0xFF0F034E),
         elevation: 0,
-        title: const Text(
-          'Rankings',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        title: const Row(
+          children: [
+            Text(
+              'Rankings',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20),
+            ),
+          ],
         ),
-        leading: InkWell(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: const Icon(Icons.arrow_back, color: Colors.white)),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: Column(
         children: [
+          // Tab Bar with yellow indicator
           Container(
-            color: const Color(0xFFFDB515),
+            color: const Color(0xFFFDB515), // dark card-like background
             child: TabBar(
               controller: _tabController,
-              labelColor: Colors.black87,
-              unselectedLabelColor: Colors.black54,
-              indicatorColor: Colors.black87,
+              labelColor: Colors.black,
+              unselectedLabelColor: Colors.black,
+              indicatorColor: Colors.black,
               indicatorWeight: 4,
+              labelStyle: const TextStyle(fontWeight: FontWeight.bold),
               tabs: const [
                 Tab(text: 'Daily'),
                 Tab(text: 'Weekly'),
@@ -57,6 +66,8 @@ class _RankingPageState extends State<RankingPage>
               ],
             ),
           ),
+
+          // Tab content
           Expanded(
             child: TabBarView(
               controller: _tabController,
@@ -91,7 +102,7 @@ class _RankingPageState extends State<RankingPage>
       children: [
         // Header row
         Container(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
           decoration: BoxDecoration(
             color: const Color(0xFF0F034E),
             borderRadius: BorderRadius.circular(12),
@@ -143,25 +154,24 @@ class _RankingPageState extends State<RankingPage>
         ...List.generate(rankings.length, (index) {
           final rank = rankings[index];
           final rankNumber = index + 1;
-          final backgroundColor =
-              (index % 2 == 0) ? const Color(0xFFFFF9E6) : Colors.white;
-
-          // Calculate leading by points (example: difference from next rank)
-          final int leadBy = index < rankings.length - 1
-              ? (rank['points'] as int) - (rankings[index + 1]['points'] as int)
-              : 0;
+          final isTop3 = rankNumber <= 3;
 
           return Container(
             margin: const EdgeInsets.only(bottom: 12),
             padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
             decoration: BoxDecoration(
-              color: backgroundColor,
+              color: isTop3
+                  ? const Color(0xFFFDB515).withOpacity(0.25)
+                  : const Color(0xFF0F034E),
               borderRadius: BorderRadius.circular(12),
+              border: isTop3
+                  ? Border.all(color: const Color(0xFFFDB515), width: 1)
+                  : null,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
@@ -170,72 +180,77 @@ class _RankingPageState extends State<RankingPage>
               children: [
                 Row(
                   children: [
-                    // Name
+                    // Name + rank icon
                     Expanded(
                       flex: 5,
                       child: Row(
                         children: [
-                          if (rankNumber <= 3)
+                          if (isTop3)
                             const Padding(
-                              padding: EdgeInsets.only(right: 6),
-                              child: Text(
-                                '⭐',
-                                style: TextStyle(fontSize: 18),
+                              padding: const EdgeInsets.only(right: 8),
+                              child: Icon(
+                                Icons.star,
+                                color: const Color(0xFFFDB515),
+                                size: 20,
                               ),
                             ),
                           Text(
                             rank['name'] as String,
                             style: TextStyle(
-                              fontSize: rankNumber <= 3 ? 17 : 16,
-                              fontWeight: rankNumber <= 3
-                                  ? FontWeight.bold
-                                  : FontWeight.w600,
-                              color: Colors.black87,
+                              fontSize: isTop3 ? 17 : 16,
+                              fontWeight:
+                                  isTop3 ? FontWeight.bold : FontWeight.w600,
+                              color: isTop3
+                                  ? const Color(0xFFFDB515)
+                                  : Colors.white,
                             ),
                           ),
                         ],
                       ),
                     ),
 
-                    // Rank (middle)
+                    // Rank number (yellow for top 3)
                     Expanded(
                       flex: 2,
                       child: Center(
                         child: Text(
                           '$rankNumber',
                           style: TextStyle(
-                            fontSize: rankNumber <= 3 ? 20 : 18,
+                            fontSize: isTop3 ? 22 : 18,
                             fontWeight: FontWeight.bold,
-                            color: const Color(0xFFFDB515),
+                            color: isTop3
+                                ? const Color(0xFFFDB515)
+                                : Colors.white70,
                           ),
                         ),
                       ),
                     ),
 
-                    // Points
+                    // Points (yellow for top 3)
                     Expanded(
                       flex: 3,
                       child: Text(
                         '${rank['points']}',
                         textAlign: TextAlign.right,
                         style: TextStyle(
-                          fontSize: rankNumber <= 3 ? 20 : 18,
+                          fontSize: isTop3 ? 20 : 18,
                           fontWeight: FontWeight.bold,
-                          color: const Color(0xFFFDB515),
+                          color:
+                              isTop3 ? const Color(0xFFFDB515) : Colors.white,
                         ),
                       ),
                     ),
                   ],
                 ),
 
-                // Show leading by for top 3
-                if (rankNumber <= 3 && leadBy > 0) ...[
+                // Leading by points (only for top 3)
+                if (isTop3 && index < rankings.length - 1) ...[
                   const SizedBox(height: 8),
                   Text(
-                    'Leading by $leadBy points',
-                    style: TextStyle(
+                    'Leading by ${(rank['points'] as int) - (rankings[index + 1]['points'] as int)} points',
+                    style: const TextStyle(
                       fontSize: 13,
-                      color: Colors.black54,
+                      color: Colors.white70,
                     ),
                   ),
                 ],
