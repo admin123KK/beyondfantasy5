@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:beyondfantasy/api.dart';
 import 'package:beyondfantasy/fantasyteam.dart';
 import 'package:beyondfantasy/loginpage.dart';
