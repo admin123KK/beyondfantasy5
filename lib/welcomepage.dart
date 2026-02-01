@@ -1,4 +1,4 @@
-import 'package:beyondfantasy/pageone.dart';
+import 'package:beyondfantasy/homepage.dart';
 import 'package:flutter/material.dart';
 
 class Welcomepage extends StatefulWidget {
@@ -16,10 +16,9 @@ class _WelcomepageState extends State<Welcomepage> {
       body: SafeArea(
         child: Column(
           children: [
-            Spacer(),
-            // Top text section
+            const Spacer(),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 0, vertical: 60),
+              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 60),
               child: Column(
                 children: [
                   const Text(
@@ -60,18 +59,15 @@ class _WelcomepageState extends State<Welcomepage> {
                 ],
               ),
             ),
-
-            Spacer(),
+            const Spacer(),
             const SizedBox(height: 40),
-
-            // Get Started button
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
               child: InkWell(
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const Pageone()),
+                    MaterialPageRoute(builder: (context) => const HomePage()),
                   );
                 },
                 child: Container(

@@ -1,7 +1,6 @@
 import 'package:beyondfantasy/loginpage.dart';
 import 'package:flutter/material.dart';
 
-// Page 1
 class Pageone extends StatelessWidget {
   const Pageone({super.key});
 
@@ -232,7 +231,6 @@ class Pagetwo extends StatelessWidget {
   }
 }
 
-// Page 3
 class Pagethree extends StatelessWidget {
   const Pagethree({super.key});
 
@@ -243,7 +241,6 @@ class Pagethree extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // Main content - centered
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -276,8 +273,7 @@ class Pagethree extends StatelessWidget {
                 ),
               ),
             ),
-
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Padding(
