@@ -6,4 +6,5 @@ class ApiConstants {
   static const String registerEndPoint = "$baseUrl/register";
   static const String profileEndPoint = "$baseUrl/user";
   static const String logoutEndPoint = "$baseUrl/logout";
+  static const String matchesEndPoint = "$baseUrl/fantasy-matches";
 }

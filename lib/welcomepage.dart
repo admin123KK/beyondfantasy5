@@ -1,4 +1,4 @@
-import 'package:beyondfantasy/homepage.dart';
+import 'package:beyondfantasy/pageone.dart';
 import 'package:flutter/material.dart';
 
 class Welcomepage extends StatefulWidget {
@@ -36,7 +36,7 @@ class _WelcomepageState extends State<Welcomepage> {
                       width: double.infinity,
                       height: 210,
                       decoration: BoxDecoration(
-                        color: Color(0xFF0F034E),
+                        color: const Color(0xFF0F034E),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Image.asset(
@@ -67,7 +67,7 @@ class _WelcomepageState extends State<Welcomepage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const HomePage()),
+                    MaterialPageRoute(builder: (context) => const Pageone()),
                   );
                 },
                 child: Container(
