@@ -144,9 +144,13 @@ class _GameSchedulePageState extends State<GameSchedulePage> {
                             match['away_team'] as String? ?? 'Unknown';
                         final dateTime =
                             _formatDateTime(match['match_date'] as String?);
-                        final venue =
+                        final venueRaw =
                             match['match_details']?['venue'] as String? ??
                                 'Unknown Venue';
+                        // Truncate long venue names with ellipsis
+                        final venue = venueRaw.length > 25
+                            ? '${venueRaw.substring(0, 22)}...'
+                            : venueRaw;
                         const league = 'ICC Women\'s World Cup';
                         final fantasyMatchId =
                             match['fantasy_match_id']?.toString() ?? '';
@@ -203,6 +207,7 @@ class _GameSchedulePageState extends State<GameSchedulePage> {
                                         fontWeight: FontWeight.bold,
                                       ),
                                       overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
                                     ),
                                   ),
                                   Container(
@@ -216,7 +221,7 @@ class _GameSchedulePageState extends State<GameSchedulePage> {
                                       'VS',
                                       style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 16,
+                                        fontSize: 14,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -231,46 +236,56 @@ class _GameSchedulePageState extends State<GameSchedulePage> {
                                         fontWeight: FontWeight.bold,
                                       ),
                                       overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
                                     ),
                                   ),
                                 ],
                               ),
                               const SizedBox(height: 12),
 
-                              // League + Ground
+                              // League + Ground (venue truncated if too long)
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Row(
-                                    children: [
-                                      const Icon(Icons.emoji_events,
-                                          color: Color(0xFFFDB515), size: 18),
-                                      const SizedBox(width: 6),
-                                      Text(
-                                        league,
-                                        style: const TextStyle(
-                                          color: Color(0xFFFDB515),
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
+                                  const Flexible(
+                                    child: Row(
+                                      children: [
+                                        const Icon(Icons.emoji_events,
+                                            color: Color(0xFFFDB515), size: 18),
+                                        const SizedBox(width: 6),
+                                        Text(
+                                          league,
+                                          style: const TextStyle(
+                                            color: Color(0xFFFDB515),
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                  Row(
-                                    children: [
-                                      const Icon(Icons.location_on,
-                                          color: Color(0xFFFDB515), size: 18),
-                                      const SizedBox(width: 6),
-                                      Text(
-                                        venue,
-                                        style: const TextStyle(
-                                          color: Color(0xFFFDB515),
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
+                                  Flexible(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        const Icon(Icons.location_on,
+                                            color: Color(0xFFFDB515), size: 18),
+                                        const SizedBox(width: 6),
+                                        Text(
+                                          venue,
+                                          style: const TextStyle(
+                                            color: Color(0xFFFDB515),
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
@@ -281,9 +296,15 @@ class _GameSchedulePageState extends State<GameSchedulePage> {
                                 alignment: Alignment.centerRight,
                                 child: ElevatedButton(
                                   onPressed: () async {
-                                    // Save fantasy_match_id before going to team creation
+                                    // Save fantasy_match_id before navigation
                                     if (fantasyMatchId.isNotEmpty) {
-                                      await _saveMatchId(fantasyMatchId);
+                                      final prefs =
+                                          await SharedPreferences.getInstance();
+                                      await prefs.setString(
+                                          'selected_fantasy_match_id',
+                                          fantasyMatchId);
+                                      debugPrint(
+                                          'Saved fantasy_match_id: $fantasyMatchId');
                                     }
 
                                     Navigator.push(
@@ -325,11 +346,5 @@ class _GameSchedulePageState extends State<GameSchedulePage> {
                       },
                     ),
     );
-  }
-
-  Future<void> _saveMatchesId(String matchId) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('selected_fantasy_match_id', matchId);
-    debugPrint('Saved fantasy_match_id: $matchId');
   }
 }

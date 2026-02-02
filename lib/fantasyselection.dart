@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-import 'package:beyondfantasy/api.dart'; // your ApiConstants file
+import 'package:beyondfantasy/api.dart';
+import 'package:beyondfantasy/fantasyteam.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,32 +21,41 @@ class _FantasySelectState extends State<FantasySelect> {
   String teamBName = 'Loading...';
   String matchDateTime = 'Loading...';
   String venue = 'Loading...';
-  String league = 'ICC Women\'s World Cup';
+  String league = "ICC Women's World Cup";
 
   bool _isLoading = true;
   String? _error;
 
-  int get selectedCount =>
+  String? selectedMatchId;
+  String? userId; // will load from prefs
+
+  int? captainId;
+  int? viceCaptainId;
+
+  // Total selected players
+  int get totalSelected =>
       teamA.where((p) => p['selected'] == true).length +
       teamB.where((p) => p['selected'] == true).length;
 
-  int get teamASelected => teamA.where((p) => p['selected'] == true).length;
-  int get teamBSelected => teamB.where((p) => p['selected'] == true).length;
+  // First 11 selected = playing
+  int get playingCount => totalSelected > 11 ? 11 : totalSelected;
+
+  // After 11 = bench
+  int get benchCount => totalSelected > 11 ? totalSelected - 11 : 0;
 
   bool get canCreateTeam =>
-      selectedCount == 11 && teamASelected <= 7 && teamBSelected <= 7;
-
-  String? selectedMatchId;
+      totalSelected == 14 && captainId != null && viceCaptainId != null;
 
   @override
   void initState() {
     super.initState();
-    _loadMatchIdAndFetchPlayers();
+    _loadUserAndMatchData();
   }
 
-  Future<void> _loadMatchIdAndFetchPlayers() async {
+  Future<void> _loadUserAndMatchData() async {
     final prefs = await SharedPreferences.getInstance();
     selectedMatchId = prefs.getString('selected_fantasy_match_id');
+    userId = prefs.getString('user_id') ?? '6'; // fallback if not found
 
     if (selectedMatchId == null || selectedMatchId!.isEmpty) {
       setState(() {
@@ -66,7 +76,8 @@ class _FantasySelectState extends State<FantasySelect> {
 
     try {
       final response = await http.get(
-        Uri.parse(ApiConstants.playersEndPoint),
+        Uri.parse(
+            '${ApiConstants.playersEndPoint}?fantasy_match_id=$selectedMatchId'),
         headers: {'Content-Type': 'application/json'},
       );
 
@@ -74,7 +85,6 @@ class _FantasySelectState extends State<FantasySelect> {
         final data = jsonDecode(response.body);
         final players = data['players'] as List<dynamic>? ?? [];
 
-        // Clear previous lists
         teamA.clear();
         teamB.clear();
 
@@ -96,9 +106,6 @@ class _FantasySelectState extends State<FantasySelect> {
           }
         }
 
-        // Fetch match details if needed (you can add another API call here if required)
-        // For now using dummy match info - you can fetch from match endpoint if needed
-
         setState(() {
           _isLoading = false;
         });
@@ -110,7 +117,7 @@ class _FantasySelectState extends State<FantasySelect> {
       }
     } catch (e) {
       setState(() {
-        _error = 'Error: $e';
+        _error = 'Error loading players: $e';
         _isLoading = false;
       });
     }
@@ -121,46 +128,116 @@ class _FantasySelectState extends State<FantasySelect> {
       final team = teamIndex == 0 ? teamA : teamB;
       final player = team[playerIndex];
 
-      final teamSelected = team.where((p) => p['selected'] == true).length;
-
-      if (!player['selected'] && teamSelected >= 7) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Maximum 7 players from one team')),
-        );
-        return;
-      }
+      final currentTotal = totalSelected;
 
       player['selected'] = !(player['selected'] ?? false);
+
+      if (player['selected'] == true && currentTotal >= 14) {
+        player['selected'] = false;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Maximum 14 players allowed')),
+        );
+      }
     });
   }
 
-  Future<void> _createFantasyTeam() async {
-    if (!canCreateTeam) return;
+  void _showSelectionDialog(String type) {
+    final playingPlayers = [
+      ...teamA.where((p) => p['selected'] == true),
+      ...teamB.where((p) => p['selected'] == true),
+    ].take(11).toList(); // only from playing 11
 
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Color(0xFF0F034E),
+        title: Text(
+          'Choose $type',
+          style: TextStyle(color: Colors.white),
+        ),
+        content: SizedBox(
+          width: double.maxFinite,
+          height: 300,
+          child: ListView.builder(
+            itemCount: playingPlayers.length,
+            itemBuilder: (context, i) {
+              final player = playingPlayers[i];
+              final isCaptain = captainId == player['id'];
+              final isVC = viceCaptainId == player['id'];
+
+              return ListTile(
+                title: Text(
+                  player['name'],
+                  style: TextStyle(
+                    fontWeight:
+                        isCaptain || isVC ? FontWeight.bold : FontWeight.normal,
+                    color: isCaptain
+                        ? Colors.yellow[700]
+                        : isVC
+                            ? Colors.yellow[900]
+                            : Colors.white,
+                  ),
+                ),
+                subtitle: Text(
+                  player['role'],
+                  style: TextStyle(color: Colors.white),
+                ),
+                trailing: isCaptain
+                    ? const Icon(Icons.star, color: Color(0xFFFDB515))
+                    : isVC
+                        ? const Icon(Icons.star_half, color: Color(0xFFFDB515))
+                        : null,
+                onTap: () {
+                  setState(() {
+                    if (type == 'Captain') {
+                      captainId = player['id'];
+                    } else {
+                      viceCaptainId = player['id'];
+                    }
+                  });
+                  Navigator.pop(context);
+                },
+              );
+            },
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _createFantasyTeam() async {
     setState(() => _isLoading = true);
 
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('auth_token') ?? '';
 
-      // Collect selected player IDs
-      final selectedPlayers = [
+      // Collect IDs
+      final allSelected = [
         ...teamA.where((p) => p['selected'] == true).map((p) => p['id']),
         ...teamB.where((p) => p['selected'] == true).map((p) => p['id']),
       ];
 
-      // For simplicity: first selected is captain, second is vice-captain
-      final captain = selectedPlayers.isNotEmpty ? selectedPlayers[0] : null;
-      final viceCaptain =
-          selectedPlayers.length > 1 ? selectedPlayers[1] : null;
+      final playingIds = allSelected.take(11).toList();
+      final benchIds = allSelected.skip(11).toList();
 
       final body = {
         "fantasy_match_id": selectedMatchId,
+        "user_id": userId ?? "6",
         "team_name": "My Fantasy Team ${DateTime.now().millisecondsSinceEpoch}",
-        "playing_11": selectedPlayers,
-        "bench_players": [], // optional: can add logic later
-        "captain": captain,
-        "vice_captain": viceCaptain,
+        "playing_11": playingIds,
+        "bench_players": benchIds,
+        "captain": captainId,
+        "vice_captain": viceCaptainId,
       };
 
       final response = await http.post(
@@ -175,13 +252,17 @@ class _FantasySelectState extends State<FantasySelect> {
       if (response.statusCode == 200 || response.statusCode == 201) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Fantasy team created successfully!'),
+            content: Text('Team created successfully!'),
             backgroundColor: Colors.green,
           ),
         );
 
-        // Optional: navigate to My Teams or global teams page
-        Navigator.pushReplacementNamed(context, '/my-teams'); // or your route
+        // Navigate to next page
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const GlobalFantasyTeamsPage()),
+        );
       } else {
         final errorData = jsonDecode(response.body);
         ScaffoldMessenger.of(context).showSnackBar(
@@ -220,7 +301,7 @@ class _FantasySelectState extends State<FantasySelect> {
               Text(_error!, style: const TextStyle(color: Colors.redAccent)),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _loadMatchIdAndFetchPlayers,
+                onPressed: _loadUserAndMatchData,
                 child: const Text('Retry'),
               ),
             ],
@@ -245,11 +326,11 @@ class _FantasySelectState extends State<FantasySelect> {
       ),
       body: Column(
         children: [
-          // Match Info Header
+          // Match Info
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(16),
-            color: const Color(0xFF0F034E),
+            color: const Color(0xFF1A2A44),
             child: Column(
               children: [
                 Text(
@@ -259,6 +340,7 @@ class _FantasySelectState extends State<FantasySelect> {
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
+                  textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -283,7 +365,7 @@ class _FantasySelectState extends State<FantasySelect> {
             ),
           ),
 
-          // Bottom bar
+          // Bottom Controls - only show when ready
           Container(
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
             decoration: const BoxDecoration(
@@ -309,9 +391,9 @@ class _FantasySelectState extends State<FantasySelect> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
-                          'Selected: $selectedCount / 11',
+                          'Playing: $playingCount / 11 • Bench: $benchCount / 3',
                           style: TextStyle(
-                            color: selectedCount == 11
+                            color: canCreateTeam
                                 ? const Color(0xFFFDB515)
                                 : Colors.white,
                             fontSize: 15,
@@ -320,37 +402,83 @@ class _FantasySelectState extends State<FantasySelect> {
                         ),
                       ),
                       Text(
-                        'A: $teamASelected • B: $teamBSelected',
+                        'Total: $totalSelected / 14',
                         style: const TextStyle(
                             color: Colors.white70, fontSize: 13),
                       ),
                     ],
                   ),
                   const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 56,
-                    child: ElevatedButton.icon(
-                      onPressed: canCreateTeam ? _createFantasyTeam : null,
-                      icon: const Icon(Icons.check_circle_outline, size: 22),
-                      label: Text(
-                        canCreateTeam
-                            ? 'Create & Join Contest'
-                            : 'Select 11 Players',
-                        style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: canCreateTeam
-                            ? const Color(0xFFFDB515)
-                            : Colors.grey[700],
-                        foregroundColor: Colors.black87,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)),
-                        elevation: canCreateTeam ? 8 : 0,
-                      ),
+
+                  // Show captain/vice-captain selection only after 14 selected
+                  if (totalSelected == 14) ...[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        OutlinedButton.icon(
+                          onPressed: () => _showSelectionDialog('Captain'),
+                          icon: const Icon(Icons.star, size: 18),
+                          label: Text(
+                            captainId == null
+                                ? 'Choose Captain'
+                                : 'Change Captain',
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(color: Color(0xFFFDB515)),
+                            foregroundColor: const Color(0xFFFDB515),
+                          ),
+                        ),
+                        OutlinedButton.icon(
+                          onPressed: () => _showSelectionDialog('Vice-Captain'),
+                          icon: const Icon(Icons.star_half, size: 18),
+                          label: Text(
+                            viceCaptainId == null
+                                ? 'Choose Vice-Captain'
+                                : 'Change Vice-Captain',
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(color: Color(0xFFFDB515)),
+                            foregroundColor: const Color(0xFFFDB515),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
+                    const SizedBox(height: 16),
+                  ],
+
+                  // Create button appears only when everything is ready
+                  if (canCreateTeam)
+                    SizedBox(
+                      width: double.infinity,
+                      height: 56,
+                      child: ElevatedButton.icon(
+                        onPressed: _createFantasyTeam,
+                        icon: const Icon(Icons.check_circle_outline, size: 22),
+                        label: const Text(
+                          'Create & Join Contest',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFFDB515),
+                          foregroundColor: Colors.black87,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30)),
+                          elevation: 8,
+                        ),
+                      ),
+                    )
+                  else if (totalSelected == 14)
+                    const Text(
+                      'Please choose Captain & Vice-Captain',
+                      style: TextStyle(color: Colors.yellow, fontSize: 14),
+                    )
+                  else
+                    Text(
+                      'Select $totalSelected / 14 players',
+                      style:
+                          const TextStyle(color: Colors.white70, fontSize: 14),
+                    ),
                 ],
               ),
             ),
@@ -370,7 +498,7 @@ class _FantasySelectState extends State<FantasySelect> {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 16),
           decoration: BoxDecoration(
-            color: const Color(0xFF0F034E),
+            color: const Color(0xFF1A2A44),
             border: Border(
                 bottom: BorderSide(color: const Color(0xFFFDB515), width: 3)),
           ),
@@ -395,7 +523,7 @@ class _FantasySelectState extends State<FantasySelect> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    '$selectedInTeam / 7',
+                    '$selectedInTeam selected',
                     style: const TextStyle(
                       color: Colors.black87,
                       fontSize: 14,
@@ -451,7 +579,7 @@ class _FantasySelectState extends State<FantasySelect> {
         decoration: BoxDecoration(
           color: isSelected
               ? roleColor.withOpacity(0.18)
-              : const Color(0xFF0F034E),
+              : const Color(0xFF1A2A44),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isSelected ? const Color(0xFFFDB515) : Colors.transparent,
@@ -460,9 +588,10 @@ class _FantasySelectState extends State<FantasySelect> {
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                      color: const Color(0xFFFDB515).withOpacity(0.35),
-                      blurRadius: 10,
-                      spreadRadius: 2)
+                    color: const Color(0xFFFDB515).withOpacity(0.35),
+                    blurRadius: 10,
+                    spreadRadius: 2,
+                  ),
                 ]
               : null,
         ),
@@ -480,9 +609,10 @@ class _FantasySelectState extends State<FantasySelect> {
               child: Text(
                 role,
                 style: TextStyle(
-                    color: roleColor,
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold),
+                  color: roleColor,
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             const SizedBox(width: 14),
