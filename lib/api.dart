@@ -7,4 +7,7 @@ class ApiConstants {
   static const String profileEndPoint = "$baseUrl/user";
   static const String logoutEndPoint = "$baseUrl/logout";
   static const String matchesEndPoint = "$baseUrl/fantasy-matches";
+
+  static const String playersEndPoint = "$baseUrl/players?match_id=328";
+  static const String createfantasyteamEndPoint = "$baseUrl/fantasy-teams";
 }

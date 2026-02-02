@@ -4,7 +4,8 @@ import 'package:beyondfantasy/api.dart'; // your ApiConstants file
 import 'package:beyondfantasy/fantasyselection.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart'; // for date formatting
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GameSchedulePage extends StatefulWidget {
   const GameSchedulePage({super.key});
@@ -33,23 +34,18 @@ class _GameSchedulePageState extends State<GameSchedulePage> {
     try {
       final response = await http.get(
         Uri.parse(ApiConstants.matchesEndPoint),
-        headers: {
-          'Content-Type': 'application/json',
-          // If needed: 'Authorization': 'Bearer $token',
-        },
+        headers: {'Content-Type': 'application/json'},
       );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-
-        // Assuming response is a list (or wrapped in 'data')
         final List<dynamic> allMatches =
             data is List ? data : data['data'] ?? [];
 
-        // Filter ONLY matches where is_upcoming is true
+        // Filter only upcoming matches
         final upcoming = allMatches.where((match) {
           final isUpcoming = match['match']?['is_upcoming'] as bool?;
-          return isUpcoming == true; // strict true check
+          return isUpcoming == true;
         }).toList();
 
         setState(() {
@@ -70,7 +66,6 @@ class _GameSchedulePageState extends State<GameSchedulePage> {
     }
   }
 
-  // Format ISO date to readable string (e.g. 14 Jun 2026, 1:15 PM)
   String _formatDateTime(String? isoDate) {
     if (isoDate == null || isoDate.isEmpty) return 'Date not available';
     try {
@@ -78,8 +73,14 @@ class _GameSchedulePageState extends State<GameSchedulePage> {
       final formatter = DateFormat('dd MMM yyyy, h:mm a');
       return formatter.format(dateTime);
     } catch (e) {
-      return isoDate; // fallback
+      return isoDate;
     }
+  }
+
+  Future<void> _saveMatchId(String matchId) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('selected_fantasy_match_id', matchId);
+    debugPrint('Saved fantasy_match_id: $matchId');
   }
 
   @override
@@ -146,7 +147,9 @@ class _GameSchedulePageState extends State<GameSchedulePage> {
                         final venue =
                             match['match_details']?['venue'] as String? ??
                                 'Unknown Venue';
-                        const league = 'ICC Women\'s World Cup'; // as requested
+                        const league = 'ICC Women\'s World Cup';
+                        final fantasyMatchId =
+                            match['fantasy_match_id']?.toString() ?? '';
 
                         return Container(
                           margin: const EdgeInsets.only(bottom: 16),
@@ -277,7 +280,12 @@ class _GameSchedulePageState extends State<GameSchedulePage> {
                               Align(
                                 alignment: Alignment.centerRight,
                                 child: ElevatedButton(
-                                  onPressed: () {
+                                  onPressed: () async {
+                                    // Save fantasy_match_id before going to team creation
+                                    if (fantasyMatchId.isNotEmpty) {
+                                      await _saveMatchId(fantasyMatchId);
+                                    }
+
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -317,5 +325,11 @@ class _GameSchedulePageState extends State<GameSchedulePage> {
                       },
                     ),
     );
+  }
+
+  Future<void> _saveMatchesId(String matchId) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('selected_fantasy_match_id', matchId);
+    debugPrint('Saved fantasy_match_id: $matchId');
   }
 }
