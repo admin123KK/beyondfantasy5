@@ -43,6 +43,29 @@ class _FantasySelectState extends State<FantasySelect> {
   // After 11 = bench
   int get benchCount => totalSelected > 11 ? totalSelected - 11 : 0;
 
+  // Selected from each team
+  int get teamASelectedCount =>
+      teamA.where((p) => p['selected'] == true).length;
+
+  int get teamBSelectedCount =>
+      teamB.where((p) => p['selected'] == true).length;
+
+  // Check if adding to playing 11 would exceed 6 for the team
+  bool _teamExceedsPlayingLimit(int teamIndex) {
+    final playingIds = [
+      ...teamA.where((p) => p['selected'] == true).map((p) => p['id']),
+      ...teamB.where((p) => p['selected'] == true).map((p) => p['id']),
+    ].take(11);
+
+    final teamPlaying = playingIds.where((id) {
+      final allPlayers = [...teamA, ...teamB];
+      final p = allPlayers.firstWhere((pp) => pp['id'] == id, orElse: () => {});
+      return p['team'] == (teamIndex == 0 ? teamAName : teamBName);
+    }).length;
+
+    return teamPlaying > 6;
+  }
+
   bool get canCreateTeam =>
       totalSelected == 14 && captainId != null && viceCaptainId != null;
 
@@ -129,15 +152,28 @@ class _FantasySelectState extends State<FantasySelect> {
       final player = team[playerIndex];
 
       final currentTotal = totalSelected;
+      final willSelect = !(player['selected'] ?? false);
 
-      player['selected'] = !(player['selected'] ?? false);
+      // Check per-team limit for playing 11 only (when adding to playing)
+      if (willSelect &&
+          currentTotal < 11 &&
+          _teamExceedsPlayingLimit(teamIndex)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Maximum 6 players from one team in playing 11')),
+        );
+        return;
+      }
 
-      if (player['selected'] == true && currentTotal >= 14) {
-        player['selected'] = false;
+      // Check total max 14
+      if (willSelect && currentTotal >= 14) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Maximum 14 players allowed')),
         );
+        return;
       }
+
+      player['selected'] = willSelect;
     });
   }
 
@@ -150,11 +186,9 @@ class _FantasySelectState extends State<FantasySelect> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: Color(0xFF0F034E),
-        title: Text(
-          'Choose $type',
-          style: TextStyle(color: Colors.white),
-        ),
+        backgroundColor: const Color(0xFF0F034E),
+        title:
+            Text('Choose $type', style: const TextStyle(color: Colors.white)),
         content: SizedBox(
           width: double.maxFinite,
           height: 300,
@@ -178,10 +212,8 @@ class _FantasySelectState extends State<FantasySelect> {
                             : Colors.white,
                   ),
                 ),
-                subtitle: Text(
-                  player['role'],
-                  style: TextStyle(color: Colors.white),
-                ),
+                subtitle: Text(player['role'],
+                    style: const TextStyle(color: Colors.white70)),
                 trailing: isCaptain
                     ? const Icon(Icons.star, color: Color(0xFFFDB515))
                     : isVC
@@ -189,11 +221,10 @@ class _FantasySelectState extends State<FantasySelect> {
                         : null,
                 onTap: () {
                   setState(() {
-                    if (type == 'Captain') {
+                    if (type == 'Captain')
                       captainId = player['id'];
-                    } else {
+                    else
                       viceCaptainId = player['id'];
-                    }
                   });
                   Navigator.pop(context);
                 },
@@ -204,10 +235,7 @@ class _FantasySelectState extends State<FantasySelect> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(color: Colors.white),
-            ),
+            child: const Text('Cancel', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -221,7 +249,6 @@ class _FantasySelectState extends State<FantasySelect> {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('auth_token') ?? '';
 
-      // Collect IDs
       final allSelected = [
         ...teamA.where((p) => p['selected'] == true).map((p) => p['id']),
         ...teamB.where((p) => p['selected'] == true).map((p) => p['id']),
@@ -257,7 +284,6 @@ class _FantasySelectState extends State<FantasySelect> {
           ),
         );
 
-        // Navigate to next page
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -326,11 +352,10 @@ class _FantasySelectState extends State<FantasySelect> {
       ),
       body: Column(
         children: [
-          // Match Info
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(16),
-            color: const Color(0xFF1A2A44),
+            color: const Color(0xFF0F034E),
             child: Column(
               children: [
                 Text(
@@ -344,7 +369,7 @@ class _FantasySelectState extends State<FantasySelect> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '$matchDateTime • $venue • $league',
+                  '•  $league',
                   style:
                       const TextStyle(color: Color(0xFFFDB515), fontSize: 14),
                   textAlign: TextAlign.center,
@@ -352,7 +377,6 @@ class _FantasySelectState extends State<FantasySelect> {
               ],
             ),
           ),
-
           Expanded(
             child: Row(
               children: [
@@ -364,8 +388,6 @@ class _FantasySelectState extends State<FantasySelect> {
               ],
             ),
           ),
-
-          // Bottom Controls - only show when ready
           Container(
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
             decoration: const BoxDecoration(
@@ -410,7 +432,7 @@ class _FantasySelectState extends State<FantasySelect> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Show captain/vice-captain selection only after 14 selected
+                  // Captain & Vice-Captain selection (only after 14 selected)
                   if (totalSelected == 14) ...[
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -446,7 +468,6 @@ class _FantasySelectState extends State<FantasySelect> {
                     const SizedBox(height: 16),
                   ],
 
-                  // Create button appears only when everything is ready
                   if (canCreateTeam)
                     SizedBox(
                       width: double.infinity,
@@ -472,6 +493,7 @@ class _FantasySelectState extends State<FantasySelect> {
                     const Text(
                       'Please choose Captain & Vice-Captain',
                       style: TextStyle(color: Colors.yellow, fontSize: 14),
+                      textAlign: TextAlign.center,
                     )
                   else
                     Text(
@@ -496,9 +518,9 @@ class _FantasySelectState extends State<FantasySelect> {
       children: [
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          decoration: BoxDecoration(
-            color: const Color(0xFF1A2A44),
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: const BoxDecoration(
+            color: const Color(0xFF0F034E),
             border: Border(
                 bottom: BorderSide(color: const Color(0xFFFDB515), width: 3)),
           ),
@@ -515,22 +537,6 @@ class _FantasySelectState extends State<FantasySelect> {
                   ),
                 ),
                 const SizedBox(width: 12),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFDB515),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    '$selectedInTeam selected',
-                    style: const TextStyle(
-                      color: Colors.black87,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
               ],
             ),
           ),
