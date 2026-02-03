@@ -155,7 +155,7 @@ class _RankingPageState extends State<RankingPage>
             decoration: BoxDecoration(
               color: isTop3
                   ? const Color(0xFFFDB515).withOpacity(0.25)
-                  : const Color(0xFF0F034E),
+                  : const Color(0xFF1A1A3D),
               borderRadius: BorderRadius.circular(12),
               border: isTop3
                   ? Border.all(color: const Color(0xFFFDB515), width: 1)

@@ -1,58 +1,81 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
-class GlobalFantasyTeamsPage extends StatelessWidget {
+import 'package:beyondfantasy/api.dart'; // your ApiConstants file
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+class GlobalFantasyTeamsPage extends StatefulWidget {
   const GlobalFantasyTeamsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> globalTeams = [
-      {
-        'creator': 'Ramesh Thapa',
-        'teamName': 'Royal Strikers',
-        'captain': 'Jasprit Bumrah',
-        'viceCaptain': 'Hardik Pandya',
-        'players': 11,
-        'points': 284,
-        'rank': 1,
-      },
-      {
-        'creator': 'Suresh Lama',
-        'teamName': 'Spin Masters',
-        'captain': 'Kuldeep Yadav',
-        'viceCaptain': 'Ravindra Jadeja',
-        'players': 11,
-        'points': 265,
-        'rank': 3,
-      },
-      {
-        'creator': 'Bikram Gurung',
-        'teamName': 'Death Overs XI',
-        'captain': 'Arshdeep Singh',
-        'viceCaptain': 'Mohammed Siraj',
-        'players': 11,
-        'points': 231,
-        'rank': 8,
-      },
-      {
-        'creator': 'Dipak Joshi',
-        'teamName': 'Power Hitters',
-        'captain': 'Rishabh Pant',
-        'viceCaptain': 'Suryakumar Yadav',
-        'players': 11,
-        'points': 198,
-        'rank': 12,
-      },
-      {
-        'creator': 'Anil Karki',
-        'teamName': 'Nepal Dominators',
-        'captain': 'Rohit Paudel',
-        'viceCaptain': 'Kushal Malla',
-        'players': 11,
-        'points': 176,
-        'rank': 19,
-      },
-    ];
+  State<GlobalFantasyTeamsPage> createState() => _GlobalFantasyTeamsPageState();
+}
 
+class _GlobalFantasyTeamsPageState extends State<GlobalFantasyTeamsPage> {
+  List<Map<String, dynamic>> leaderboard = [];
+  bool _isLoading = true;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchLeaderboard();
+  }
+
+  Future<void> _fetchLeaderboard() async {
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+
+    try {
+      final response = await http.get(
+        Uri.parse(ApiConstants.fantasyleaderboardEndPoint),
+        headers: {
+          'Content-Type': 'application/json',
+          // If auth needed: 'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final List<dynamic> leaderboardData = data['leaderboard'] ?? [];
+
+        setState(() {
+          leaderboard = leaderboardData.map((item) {
+            return {
+              'id': item['id'],
+              'creator': item['user']?['name'] as String? ?? 'Unknown User',
+              'teamName': item['team_name'] as String? ?? 'Unnamed Team',
+              'points': int.tryParse(item['total_points'].toString()) ?? 0,
+              'rank': 0, // will be set below
+            };
+          }).toList();
+
+          // Assign ranks based on points (descending)
+          leaderboard.sort((a, b) => b['points'].compareTo(a['points']));
+          for (int i = 0; i < leaderboard.length; i++) {
+            leaderboard[i]['rank'] = i + 1;
+          }
+
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _error = 'Failed to load leaderboard: ${response.statusCode}';
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _error = 'Error: $e';
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF0F034E),
       appBar: AppBar(
@@ -78,138 +101,140 @@ class GlobalFantasyTeamsPage extends StatelessWidget {
       ),
       body: Column(
         children: [
-          // Optional match context header
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(16),
-            color: const Color(0xFF0F034E),
-            child: const Column(
-              children: [
-                Text(
-                  'Nepal vs India',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  '12/10/2025, 2:00 PM • Kirtipur • ICC T20 World Cup',
-                  style: TextStyle(color: Color(0xFFFDB515), fontSize: 14),
-                ),
-              ],
-            ),
-          ),
+          // Optional match context header (you can make dynamic later)
 
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: globalTeams.length,
-              itemBuilder: (context, index) {
-                final team = globalTeams[index];
-
-                // Safe access with fallback values
-                final creator = team['creator'] as String? ?? 'Unknown User';
-                final teamName = team['teamName'] as String? ?? 'Unnamed Team';
-                final captain = team['captain'] as String? ?? 'N/A';
-                final viceCaptain = team['viceCaptain'] as String? ?? 'N/A';
-                final players = team['players'] as int? ?? 0;
-                final points = team['points'] as int? ?? 0;
-                final rank = team['rank'] as int? ?? 0;
-
-                return Card(
-                  color: const Color(0xFF0F034E),
-                  elevation: 13,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  margin: const EdgeInsets.only(bottom: 12),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Creator
-                        Row(
+            child: _isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(color: Color(0xFFFDB515)))
+                : _error != null
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Icons.person,
-                                color: Color(0xFFFDB515), size: 18),
-                            const SizedBox(width: 8),
                             Text(
-                              'Created by $creator',
+                              _error!,
                               style: const TextStyle(
-                                color: Color(0xFFFDB515),
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
+                                  color: Colors.redAccent, fontSize: 16),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 20),
+                            ElevatedButton(
+                              onPressed: _fetchLeaderboard,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFFDB515),
+                                foregroundColor: Colors.black87,
                               ),
+                              child: const Text('Retry'),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 12),
+                      )
+                    : leaderboard.isEmpty
+                        ? const Center(
+                            child: Text(
+                              'No teams found in leaderboard',
+                              style: TextStyle(
+                                  color: Colors.white70, fontSize: 18),
+                            ),
+                          )
+                        : ListView.builder(
+                            padding: const EdgeInsets.all(16),
+                            itemCount: leaderboard.length,
+                            itemBuilder: (context, index) {
+                              final team = leaderboard[index];
 
-                        // Team name
-                        Text(
-                          teamName,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
+                              final creator =
+                                  team['creator'] as String? ?? 'Unknown User';
+                              final teamName =
+                                  team['teamName'] as String? ?? 'Unnamed Team';
+                              final points = team['points'] as int? ?? 0;
+                              final rank = team['rank'] as int? ?? (index + 1);
 
-                        // Captain & VC
-                        Text(
-                          'C: $captain • VC: $viceCaptain',
-                          style: const TextStyle(
-                              color: Colors.white70, fontSize: 14),
-                        ),
-                        const SizedBox(height: 8),
+                              return Card(
+                                color: const Color(0xFF1A1A3D),
+                                elevation: 13,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                margin: const EdgeInsets.only(bottom: 12),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      // Creator
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.person,
+                                              color: Color(0xFFFDB515),
+                                              size: 18),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            'Created by $creator',
+                                            style: const TextStyle(
+                                              color: Color(0xFFFDB515),
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 12),
 
-                        // Players count
-                        Text(
-                          'Players: $players/11',
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 14),
-                        ),
-                        const SizedBox(height: 12),
+                                      // Team name
+                                      Text(
+                                        teamName,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const Text(
+                                        'Playing : 11/11',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      const SizedBox(height: 12),
 
-                        // Rank & Points
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                const Icon(Icons.emoji_events,
-                                    color: Color(0xFFFDB515), size: 18),
-                                const SizedBox(width: 6),
-                                Text(
-                                  'Global Rank: #$rank',
-                                  style: const TextStyle(
-                                    color: Color(0xFFFDB515),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
+                                      // Rank & Points
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              const Icon(Icons.emoji_events,
+                                                  color: Color(0xFFFDB515),
+                                                  size: 18),
+                                              const SizedBox(width: 6),
+                                              Text(
+                                                'Global Rank: #$rank',
+                                                style: const TextStyle(
+                                                  color: Color(0xFFFDB515),
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Text(
+                                            '$points pts',
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
-                            Text(
-                              '$points pts',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
+                              );
+                            },
+                          ),
           ),
         ],
       ),

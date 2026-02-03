@@ -10,4 +10,6 @@ class ApiConstants {
 
   static const String playersEndPoint = "$baseUrl/players?match_id=328";
   static const String createfantasyteamEndPoint = "$baseUrl/fantasy-teams";
+  static const String fantasyleaderboardEndPoint =
+      "$baseUrl/matches/328/fantasy-leaderboard";
 }

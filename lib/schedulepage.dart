@@ -159,7 +159,7 @@ class _GameSchedulePageState extends State<GameSchedulePage> {
                           margin: const EdgeInsets.only(bottom: 16),
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF0F034E),
+                            color: const Color(0xFF1A1A3D),
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
                                 color: Colors.white.withOpacity(0.08)),

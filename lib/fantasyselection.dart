@@ -585,7 +585,7 @@ class _FantasySelectState extends State<FantasySelect> {
         decoration: BoxDecoration(
           color: isSelected
               ? roleColor.withOpacity(0.18)
-              : const Color(0xFF1A2A44),
+              : const Color(0xFF0F034E),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isSelected ? const Color(0xFFFDB515) : Colors.transparent,

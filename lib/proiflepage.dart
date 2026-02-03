@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:beyondfantasy/api.dart';
 import 'package:beyondfantasy/loginpage.dart';
 import 'package:flutter/material.dart';
@@ -214,7 +215,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         width: double.infinity,
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF0F034E),
+                          color: const Color(0xFF1A1A3D),
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
