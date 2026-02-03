@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:beyondfantasy/api.dart'; // your ApiConstants file
+import 'package:beyondfantasy/api.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -33,8 +33,6 @@ class _GlobalFantasyTeamsPageState extends State<GlobalFantasyTeamsPage> {
         Uri.parse(ApiConstants.fantasyleaderboardEndPoint),
         headers: {
           'Content-Type': 'application/json',
-          // Add auth header if required:
-          // 'Authorization': 'Bearer $token',
         },
       );
 
@@ -53,18 +51,15 @@ class _GlobalFantasyTeamsPageState extends State<GlobalFantasyTeamsPage> {
             'creator': item['user']?['name'] as String? ?? 'Unknown User',
             'teamName': shortTeamName,
             'points': int.tryParse(item['total_points'].toString()) ?? 0,
-            'rank': 0, // will calculate after sorting
+            'rank': 0,
           };
         }).toList();
 
-        // Sort by points (highest first)
         tempList.sort((a, b) => b['points'].compareTo(a['points']));
 
-        // Assign ranks
         for (int i = 0; i < tempList.length; i++) {
           tempList[i]['rank'] = i + 1;
         }
-
         setState(() {
           leaderboard = tempList;
           _isLoading = false;

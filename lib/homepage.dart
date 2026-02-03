@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:beyondfantasy/api.dart';
 import 'package:beyondfantasy/fantasyteam.dart';
 import 'package:beyondfantasy/loginpage.dart';
@@ -8,6 +9,7 @@ import 'package:beyondfantasy/rankingpage.dart';
 import 'package:beyondfantasy/schedulepage.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,6 +21,141 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
+
+  // Upcoming matches
+  List<Map<String, dynamic>> upcomingMatches = [];
+  bool _matchesLoading = true;
+  String? _matchesError;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUpcomingMatches();
+  }
+
+  Future<void> _fetchUpcomingMatches() async {
+    setState(() {
+      _matchesLoading = true;
+      _matchesError = null;
+    });
+
+    try {
+      final response = await http.get(
+        Uri.parse(ApiConstants.matchesEndPoint),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final List<dynamic> allMatches =
+            data is List ? data : data['data'] ?? [];
+
+        // Filter upcoming matches
+        final upcoming = allMatches.where((match) {
+          return match['match']?['is_upcoming'] == true;
+        }).toList();
+
+        // Clean team names and calculate time/date
+        final formattedMatches = upcoming.map((match) {
+          String home =
+              (match['home_team'] as String?)?.replaceAll(' Women', '') ??
+                  'Unknown';
+          String away =
+              (match['away_team'] as String?)?.replaceAll(' Women', '') ??
+                  'Unknown';
+
+          // Add "W" suffix for women's matches
+          if (match['league']?.toString().toLowerCase().contains('women') ==
+                  true ||
+              match['home_team']?.toString().toLowerCase().contains('women') ==
+                  true) {
+            home += ' W';
+            away += ' W';
+          }
+
+          final dateStr = match['match_date'] as String?;
+          String displayTime = 'Upcoming';
+          String displayDate = 'Upcoming';
+
+          if (dateStr != null) {
+            try {
+              final matchTime = DateTime.parse(dateStr).toLocal();
+              final now = DateTime.now();
+              final diff = matchTime.difference(now);
+
+              if (diff.isNegative) {
+                displayTime = 'Started';
+                displayDate = 'Live/Completed';
+              } else {
+                if (diff.inHours > 0) {
+                  displayTime = '${diff.inHours}h ${diff.inMinutes % 60}m';
+                } else if (diff.inMinutes > 0) {
+                  displayTime = '${diff.inMinutes}m';
+                } else {
+                  displayTime = 'Soon';
+                }
+                displayDate = DateFormat('dd MMM yyyy').format(matchTime);
+              }
+            } catch (e) {
+              displayTime = 'Upcoming';
+              displayDate = 'Upcoming';
+            }
+          }
+
+          return {
+            'league': 'ICC Women\'s World Cup',
+            'team1': home,
+            'team1Flag': _getFlagUrl(home.replaceAll(' W', '')),
+            'team2': away,
+            'team2Flag': _getFlagUrl(away.replaceAll(' W', '')),
+            'time': displayTime,
+            'date': displayDate,
+          };
+        }).toList();
+
+        setState(() {
+          upcomingMatches = formattedMatches;
+          _matchesLoading = false;
+        });
+      } else {
+        setState(() {
+          _matchesError = 'Failed to load matches';
+          _matchesLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _matchesError = 'Error: $e';
+        _matchesLoading = false;
+      });
+    }
+  }
+
+  // Flag URL (sharp quality)
+  String _getFlagUrl(String teamName) {
+    final lower = teamName.toLowerCase().trim();
+    String code = 'xx';
+
+    if (lower.contains('england'))
+      code = 'gb-eng';
+    else if (lower.contains('sri lanka'))
+      code = 'lk';
+    else if (lower.contains('australia'))
+      code = 'au';
+    else if (lower.contains('south africa'))
+      code = 'za';
+    else if (lower.contains('west indies'))
+      code = 'wi';
+    else if (lower.contains('new zealand'))
+      code = 'nz';
+    else if (lower.contains('india'))
+      code = 'in';
+    else if (lower.contains('pakistan'))
+      code = 'pk';
+    else if (lower.contains('bangladesh')) code = 'bd';
+
+    return 'https://flagcdn.com/h40/$code.png'; // h40 = sharper
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +223,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         const SizedBox(height: 12),
 
+                        // Live match card (kept exactly as is)
                         Container(
                           padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
                           decoration: BoxDecoration(
@@ -104,7 +242,6 @@ class _HomePageState extends State<HomePage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      // Nepal side
                                       const Row(
                                         children: [
                                           CircleAvatar(
@@ -123,7 +260,6 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                         ],
                                       ),
-
                                       const Text(
                                         'VS',
                                         style: TextStyle(
@@ -132,7 +268,6 @@ class _HomePageState extends State<HomePage> {
                                           color: Color(0xFFFDB515),
                                         ),
                                       ),
-
                                       Stack(
                                         alignment: Alignment.topCenter,
                                         clipBehavior: Clip.none,
@@ -260,6 +395,8 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         const SizedBox(height: 10),
+
+                        // Upcoming Matches Section
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -269,7 +406,13 @@ class _HomePageState extends State<HomePage> {
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             ),
                             TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => const GameSchedulePage()),
+                                );
+                              },
                               child: const Text(
                                 'See all',
                                 style: TextStyle(color: Color(0xFFFDB515)),
@@ -278,34 +421,58 @@ class _HomePageState extends State<HomePage> {
                           ],
                         ),
                         const SizedBox(height: 10),
+
                         SizedBox(
                           height: 140,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: [
-                              _buildUpcomingMatchCard(
-                                league: 'T20 World Cup',
-                                team1Flag: 'assets/images/newzealand.png',
-                                team1: 'NEWZEALAND',
-                                team2Flag: 'assets/images/srilanka.png',
-                                team2: 'SRILANKA',
-                                time: '10h 10min',
-                              ),
-                              const SizedBox(width: 16),
-                              _buildUpcomingMatchCard(
-                                league: 'T20 World Cup',
-                                team1Flag: 'assets/images/nepal.png',
-                                team1: 'NEPAL',
-                                team2Flag: 'assets/images/srilanka.png',
-                                team2: 'SRILANKA',
-                                time: 'Upcoming',
-                              ),
-                            ],
-                          ),
+                          child: _matchesLoading
+                              ? const Center(
+                                  child: CircularProgressIndicator(
+                                      color: Color(0xFFFDB515)))
+                              : _matchesError != null
+                                  ? Center(
+                                      child: Text(_matchesError!,
+                                          style: const TextStyle(
+                                              color: Colors.redAccent)))
+                                  : upcomingMatches.isEmpty
+                                      ? const Center(
+                                          child: Text(
+                                            'No upcoming matches',
+                                            style: TextStyle(
+                                                color: Colors.black54,
+                                                fontSize: 16),
+                                          ),
+                                        )
+                                      : ListView(
+                                          scrollDirection: Axis.horizontal,
+                                          children: upcomingMatches
+                                              .asMap()
+                                              .entries
+                                              .map((entry) {
+                                            final index = entry.key;
+                                            final match = entry.value;
+                                            final displayText = index == 0
+                                                ? match['time']
+                                                : match['date'];
+
+                                            return Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 16),
+                                              child: _buildUpcomingMatchCard(
+                                                league: match['league'],
+                                                team1Flag: match['team1Flag'],
+                                                team1: match['team1'],
+                                                team2Flag: match['team2Flag'],
+                                                team2: match['team2'],
+                                                time: displayText,
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
                         ),
 
                         const SizedBox(height: 10),
 
+                        // Trending News - kept exactly as it was
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -374,44 +541,30 @@ class _HomePageState extends State<HomePage> {
         showSelectedLabels: false,
         showUnselectedLabels: false,
         type: BottomNavigationBarType.fixed,
-        currentIndex: 0,
-        items: [
-          const BottomNavigationBarItem(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() => _currentIndex = index);
+          if (index == 1) {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => const GameSchedulePage()));
+          } else if (index == 2) {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => const RankingPage()));
+          } else if (index == 3) {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (_) => ProfilePage()));
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(
               icon: Icon(Icons.home, size: 28), label: 'Home'),
           BottomNavigationBarItem(
-            icon: InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const GameSchedulePage()));
-              },
-              child: const Icon(Icons.sports_cricket, size: 28),
-            ),
-            label: 'Matches',
-          ),
+              icon: Icon(Icons.sports_cricket, size: 28), label: 'Matches'),
           BottomNavigationBarItem(
-            icon: InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const RankingPage()));
-              },
-              child: const Icon(Icons.stacked_bar_chart_outlined, size: 28),
-            ),
-            label: 'Calendar',
-          ),
+              icon: Icon(Icons.stacked_bar_chart_outlined, size: 28),
+              label: 'Calendar'),
           BottomNavigationBarItem(
-            icon: InkWell(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ProfilePage()));
-              },
-              child: const Icon(Icons.person, size: 28),
-            ),
-            label: 'Profile',
-          ),
+              icon: Icon(Icons.person, size: 28), label: 'Profile'),
         ],
       ),
     );
@@ -445,7 +598,9 @@ class _HomePageState extends State<HomePage> {
               CircleAvatar(
                 radius: 24,
                 backgroundColor: Colors.white,
-                backgroundImage: AssetImage(team1Flag),
+                backgroundImage: NetworkImage(team1Flag.isNotEmpty
+                    ? team1Flag
+                    : 'https://flagcdn.com/h40/xx.png'),
               ),
               const Text(
                 'vs',
@@ -453,7 +608,10 @@ class _HomePageState extends State<HomePage> {
               ),
               CircleAvatar(
                 radius: 24,
-                backgroundImage: AssetImage(team2Flag),
+                backgroundColor: Colors.white,
+                backgroundImage: NetworkImage(team2Flag.isNotEmpty
+                    ? team2Flag
+                    : 'https://flagcdn.com/h40/xx.png'),
               ),
             ],
           ),
@@ -466,7 +624,7 @@ class _HomePageState extends State<HomePage> {
           Row(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
                   time,
                   style: const TextStyle(fontSize: 10, color: Colors.green),
@@ -480,6 +638,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
+// Keep UserDrawer unchanged (as per your request)
 class UserDrawer extends StatefulWidget {
   const UserDrawer({super.key});
 
@@ -505,18 +664,16 @@ class _UserDrawerState extends State<UserDrawer> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: Colors.white,
-        title: const Text(
-          'Logout',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+        title:
+            const Text('Logout', style: TextStyle(fontWeight: FontWeight.bold)),
         content: const Text('Are you sure you want to logout?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context, false), // Cancel
+            onPressed: () => Navigator.pop(context, false),
             child: const Text('No', style: TextStyle(color: Colors.grey)),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(context, true), // Confirm
+            onPressed: () => Navigator.pop(context, true),
             child: const Text('Yes', style: TextStyle(color: Colors.red)),
           ),
         ],
@@ -535,9 +692,8 @@ class _UserDrawerState extends State<UserDrawer> {
       final token = prefs.getString('auth_token');
 
       if (token != null && token.isNotEmpty) {
-        // Optional: Call logout endpoint (if your backend invalidates token)
         await http.post(
-          Uri.parse(ApiConstants.logoutEndPoint), // ← your logout endpoint
+          Uri.parse(ApiConstants.logoutEndPoint),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token',
@@ -561,9 +717,8 @@ class _UserDrawerState extends State<UserDrawer> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Logout failed: ${e.toString()}'),
-          backgroundColor: Colors.red,
-        ),
+            content: Text('Logout failed: ${e.toString()}'),
+            backgroundColor: Colors.red),
       );
     }
   }
@@ -592,8 +747,7 @@ class _UserDrawerState extends State<UserDrawer> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        final user =
-            data['user'] ?? data; // adjust based on your response structure
+        final user = data['user'] ?? data;
 
         setState(() {
           _name = user['name'] ?? 'User';
@@ -621,9 +775,7 @@ class _UserDrawerState extends State<UserDrawer> {
           DrawerHeader(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage(
-                    'assets/images/beyondfantasy.png',
-                  ),
+                  image: AssetImage('assets/images/beyondfantasy.png'),
                   fit: BoxFit.cover),
               gradient: LinearGradient(
                 colors: [Color(0xFF0F034E), Color(0xFF0F034E)],
@@ -661,8 +813,6 @@ class _UserDrawerState extends State<UserDrawer> {
                         ],
                       ),
           ),
-
-          // Navigation items
           ListTile(
             leading: const Icon(Icons.home, color: Colors.white),
             title: const Text('Home', style: TextStyle(color: Colors.white)),
@@ -710,7 +860,6 @@ class _UserDrawerState extends State<UserDrawer> {
                       builder: (_) => const GlobalFantasyTeamsPage()));
             },
           ),
-
           ListTile(
             leading: const Icon(Icons.person, color: Colors.white),
             title: const Text('Profile', style: TextStyle(color: Colors.white)),
@@ -720,7 +869,6 @@ class _UserDrawerState extends State<UserDrawer> {
                   context, MaterialPageRoute(builder: (_) => ProfilePage()));
             },
           ),
-          // const Divider(color: Color(0xFFFFC107)),
           ListTile(
             leading: const Icon(Icons.logout, color: Colors.redAccent),
             title: const Text('Logout', style: TextStyle(color: Colors.red)),

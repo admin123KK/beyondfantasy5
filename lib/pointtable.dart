@@ -34,7 +34,7 @@ class _PointTablePageState extends State<PointTablePage>
       appBar: AppBar(
         backgroundColor: const Color(0xFF0F034E),
         elevation: 0,
-        title: Row(
+        title: const Row(
           children: [
             const Text(
               'Point Table',
