@@ -114,7 +114,6 @@ class _ProfilePageState extends State<ProfilePage> {
       final token = prefs.getString('auth_token');
 
       if (token != null && token.isNotEmpty) {
-        // Optional: Call logout endpoint (if your backend invalidates token)
         await http.post(
           Uri.parse(ApiConstants.logoutEndPoint), // ← your logout endpoint
           headers: {

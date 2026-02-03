@@ -33,7 +33,8 @@ class _GlobalFantasyTeamsPageState extends State<GlobalFantasyTeamsPage> {
         Uri.parse(ApiConstants.fantasyleaderboardEndPoint),
         headers: {
           'Content-Type': 'application/json',
-          // If auth needed: 'Authorization': 'Bearer $token',
+          // Add auth header if required:
+          // 'Authorization': 'Bearer $token',
         },
       );
 
@@ -41,23 +42,31 @@ class _GlobalFantasyTeamsPageState extends State<GlobalFantasyTeamsPage> {
         final data = jsonDecode(response.body);
         final List<dynamic> leaderboardData = data['leaderboard'] ?? [];
 
+        List<Map<String, dynamic>> tempList = leaderboardData.map((item) {
+          String fullTeamName = item['team_name'] as String? ?? 'Unnamed Team';
+          String shortTeamName = fullTeamName.length > 30
+              ? '${fullTeamName.substring(0, 25)}..'
+              : fullTeamName;
+
+          return {
+            'id': item['id'],
+            'creator': item['user']?['name'] as String? ?? 'Unknown User',
+            'teamName': shortTeamName,
+            'points': int.tryParse(item['total_points'].toString()) ?? 0,
+            'rank': 0, // will calculate after sorting
+          };
+        }).toList();
+
+        // Sort by points (highest first)
+        tempList.sort((a, b) => b['points'].compareTo(a['points']));
+
+        // Assign ranks
+        for (int i = 0; i < tempList.length; i++) {
+          tempList[i]['rank'] = i + 1;
+        }
+
         setState(() {
-          leaderboard = leaderboardData.map((item) {
-            return {
-              'id': item['id'],
-              'creator': item['user']?['name'] as String? ?? 'Unknown User',
-              'teamName': item['team_name'] as String? ?? 'Unnamed Team',
-              'points': int.tryParse(item['total_points'].toString()) ?? 0,
-              'rank': 0, // will be set below
-            };
-          }).toList();
-
-          // Assign ranks based on points (descending)
-          leaderboard.sort((a, b) => b['points'].compareTo(a['points']));
-          for (int i = 0; i < leaderboard.length; i++) {
-            leaderboard[i]['rank'] = i + 1;
-          }
-
+          leaderboard = tempList;
           _isLoading = false;
         });
       } else {
@@ -101,8 +110,6 @@ class _GlobalFantasyTeamsPageState extends State<GlobalFantasyTeamsPage> {
       ),
       body: Column(
         children: [
-          // Optional match context header (you can make dynamic later)
-
           Expanded(
             child: _isLoading
                 ? const Center(
@@ -165,6 +172,7 @@ class _GlobalFantasyTeamsPageState extends State<GlobalFantasyTeamsPage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       // Creator
+
                                       Row(
                                         children: [
                                           const Icon(Icons.person,
@@ -181,9 +189,10 @@ class _GlobalFantasyTeamsPageState extends State<GlobalFantasyTeamsPage> {
                                           ),
                                         ],
                                       ),
+
                                       const SizedBox(height: 12),
 
-                                      // Team name
+                                      // Team name (max 20 chars shown)
                                       Text(
                                         teamName,
                                         style: const TextStyle(
@@ -191,10 +200,8 @@ class _GlobalFantasyTeamsPageState extends State<GlobalFantasyTeamsPage> {
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
                                         ),
-                                      ),
-                                      const Text(
-                                        'Playing : 11/11',
-                                        style: TextStyle(color: Colors.white),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                       const SizedBox(height: 12),
 
