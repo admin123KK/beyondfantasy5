@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:beyondfantasy/api.dart';
 import 'package:beyondfantasy/fantasyteam.dart';
 import 'package:beyondfantasy/loginpage.dart';
@@ -22,7 +21,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
 
-  // Upcoming matches
   List<Map<String, dynamic>> upcomingMatches = [];
   bool _matchesLoading = true;
   String? _matchesError;
@@ -55,7 +53,6 @@ class _HomePageState extends State<HomePage> {
           return match['match']?['is_upcoming'] == true;
         }).toList();
 
-        // Clean team names and calculate time/date
         final formattedMatches = upcoming.map((match) {
           String home =
               (match['home_team'] as String?)?.replaceAll(' Women', '') ??
@@ -64,7 +61,6 @@ class _HomePageState extends State<HomePage> {
               (match['away_team'] as String?)?.replaceAll(' Women', '') ??
                   'Unknown';
 
-          // Add "W" suffix for women's matches
           if (match['league']?.toString().toLowerCase().contains('women') ==
                   true ||
               match['home_team']?.toString().toLowerCase().contains('women') ==
@@ -131,7 +127,6 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  // Flag URL (sharp quality)
   String _getFlagUrl(String teamName) {
     final lower = teamName.toLowerCase().trim();
     String code = 'xx';
@@ -154,7 +149,7 @@ class _HomePageState extends State<HomePage> {
       code = 'pk';
     else if (lower.contains('bangladesh')) code = 'bd';
 
-    return 'https://flagcdn.com/h40/$code.png'; // h40 = sharper
+    return 'https://flagcdn.com/h40/$code.png';
   }
 
   @override
@@ -223,7 +218,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         const SizedBox(height: 12),
 
-                        // Live match card (kept exactly as is)
+                        // Live match card (unchanged)
                         Container(
                           padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
                           decoration: BoxDecoration(
@@ -396,7 +391,6 @@ class _HomePageState extends State<HomePage> {
                         ),
                         const SizedBox(height: 10),
 
-                        // Upcoming Matches Section
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -423,7 +417,7 @@ class _HomePageState extends State<HomePage> {
                         const SizedBox(height: 10),
 
                         SizedBox(
-                          height: 140,
+                          height: 160, // slightly increased for better spacing
                           child: _matchesLoading
                               ? const Center(
                                   child: CircularProgressIndicator(
@@ -471,8 +465,6 @@ class _HomePageState extends State<HomePage> {
                         ),
 
                         const SizedBox(height: 10),
-
-                        // Trending News - kept exactly as it was
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -541,7 +533,7 @@ class _HomePageState extends State<HomePage> {
         showSelectedLabels: false,
         showUnselectedLabels: false,
         type: BottomNavigationBarType.fixed,
-        currentIndex: _currentIndex,
+        // currentIndex: _currentIndex,
         onTap: (index) {
           setState(() => _currentIndex = index);
           if (index == 1) {
@@ -580,54 +572,76 @@ class _HomePageState extends State<HomePage> {
   }) {
     return Container(
       width: 220,
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
             league,
             style: const TextStyle(fontSize: 13, color: Color(0xFF003262)),
+            textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              CircleAvatar(
-                radius: 24,
-                backgroundColor: Colors.white,
-                backgroundImage: NetworkImage(team1Flag.isNotEmpty
-                    ? team1Flag
-                    : 'https://flagcdn.com/h40/xx.png'),
+              Column(
+                children: [
+                  CircleAvatar(
+                    radius: 24,
+                    backgroundColor: Colors.white,
+                    backgroundImage: NetworkImage(team1Flag.isNotEmpty
+                        ? team1Flag
+                        : 'https://flagcdn.com/h40/xx.png'),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    team1,
+                    style: const TextStyle(
+                        fontSize: 11.5, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
               const Text(
                 'vs',
                 style: TextStyle(fontSize: 14, color: Color(0xFFFDB515)),
               ),
-              CircleAvatar(
-                radius: 24,
-                backgroundColor: Colors.white,
-                backgroundImage: NetworkImage(team2Flag.isNotEmpty
-                    ? team2Flag
-                    : 'https://flagcdn.com/h40/xx.png'),
+              Column(
+                children: [
+                  CircleAvatar(
+                    radius: 24,
+                    backgroundColor: Colors.white,
+                    backgroundImage: NetworkImage(team2Flag.isNotEmpty
+                        ? team2Flag
+                        : 'https://flagcdn.com/h40/xx.png'),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    team2,
+                    style: const TextStyle(
+                        fontSize: 11.5, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
             ],
           ),
-          const SizedBox(height: 8),
-          Text(
-            '$team1          $team2',
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 5),
           Row(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Text(
                   time,
                   style: const TextStyle(fontSize: 10, color: Colors.green),
+                  textAlign: TextAlign.start,
                 ),
               ),
             ],
@@ -768,7 +782,7 @@ class _UserDrawerState extends State<UserDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: Color(0xFF0F034E),
+      backgroundColor: const Color(0xFF0F034E),
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
